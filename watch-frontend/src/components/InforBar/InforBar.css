@@ -1,0 +1,33 @@
+.info-bar {
+    background-color: #f1f1f1;
+    color: #000000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 80px;
+    padding: 20px 0;
+    flex-wrap: wrap;
+}
+
+.info-item {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    max-width: 250px;
+    text-align: left;
+}
+
+.info-icon {
+    color: #000000;
+    font-size: 36px;
+}
+
+.info-title {
+    font-weight: bold;
+    font-size: 16px;
+}
+
+.info-subtitle {
+    font-size: 14px;
+    margin-top: 2px;
+}

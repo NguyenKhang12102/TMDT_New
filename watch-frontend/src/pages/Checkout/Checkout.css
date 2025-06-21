@@ -1,0 +1,127 @@
+/* Checkout.css */
+.checkout-wrapper {
+    display: flex;
+    gap: 40px;
+    padding: 40px 200px;
+    font-family: Arial, sans-serif;
+}
+
+.checkout-left {
+    flex: 2;
+}
+
+.checkout-right {
+    flex: 1;
+    border-left: 1px solid #ddd;
+    padding-left: 20px;
+}
+
+.checkout-form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.two-col {
+    flex-direction: row;
+    gap: 10px;
+}
+
+.three-col {
+    display: flex;
+    gap: 10px;
+}
+
+input, select {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    flex: 1;
+}
+
+.shipping-box {
+    border: 1px solid #ddd;
+    padding: 20px;
+    background: #f9f9f9;
+    text-align: center;
+}
+
+.product-summary {
+    margin-bottom: 20px;
+}
+
+.product-item {
+    display: flex;
+    justify-content: space-between;
+    border-bottom: 1px solid #eee;
+    padding: 10px 0;
+}
+
+.discount-input {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.apply-btn {
+    background: #ccc;
+    padding: 10px 15px;
+    border: none;
+    cursor: pointer;
+}
+
+.totals .row {
+    display: flex;
+    justify-content: space-between;
+    padding: 8px 0;
+}
+
+.total {
+    font-weight: bold;
+    font-size: 18px;
+}
+
+.submit-btn {
+    background-color: #2980b9;
+    color: white;
+    padding: 12px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 10px;
+}
+
+.back-link {
+    display: inline-block;
+    margin-top: 10px;
+    color: #2980b9;
+    text-decoration: underline;
+}
+.address-item {
+    display: flex;
+    align-items: flex-start;
+    border: 1px solid #ccc;
+    padding: 8px;
+    margin-bottom: 8px;
+    cursor: pointer;
+}
+.address-item.selected {
+    border-color: #007bff;
+    background-color: #e7f1ff;
+}
+.address-item input[type="radio"] {
+    margin-right: 12px;
+    margin-top: 4px;
+}
+.form-error {
+    color: red;
+    font-size: 0.875rem;
+    margin-top: 4px;
+}
+

@@ -1,0 +1,34 @@
+@import "tailwindcss";
+@import '@fontsource/inter/400.css';
+@import '@fontsource/inter/600.css';
+@import '@fontsource/inter/700.css';
+@import 'slick-carousel/slick/slick.css';
+@import 'slick-carousel/slick/slick-theme.css';
+body {
+    @apply font-sans;
+}
+a {
+    color: inherit !important;
+    text-decoration: none !important;
+}
+/* Cho phép modal thoát khỏi slider */
+.slick-slide > div {
+    overflow: visible !important;
+    position: relative;
+}
+
+/* Modal nổi hẳn lên trên hết */
+.modal-overlay {
+    position: fixed !important;
+    z-index: 9999 !important;
+}
+
+/* Tăng z-index nếu modal vẫn bị che */
+.ReactModal__Overlay {
+    z-index: 9999 !important;
+}
+
+/* Tăng z-index nếu modal vẫn bị che */
+.ReactModal__Overlay {
+    z-index: 9999 !important;
+}

@@ -1,0 +1,168 @@
+.product-detail {
+    padding: 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+    font-family: Arial, sans-serif;
+}
+
+.back-button {
+    margin-bottom: 20px;
+    background-color: #eee;
+    border: none;
+    padding: 10px 15px;
+    cursor: pointer;
+    font-size: 16px;
+    border-radius: 4px;
+}
+
+.product-detail-content {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 30px;
+}
+
+.images-section {
+    flex: 1;
+    min-width: 300px;
+}
+
+.main-image {
+    width: 100%;
+    border-radius: 10px;
+    object-fit: cover;
+    max-height: 400px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
+.thumbnail-list {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.thumbnail-list img {
+    width: 60px;
+    height: 60px;
+    object-fit: cover;
+    border: 2px solid transparent;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: 0.3s ease;
+}
+
+.thumbnail-list img:hover {
+    border-color: #555;
+}
+
+.product-info {
+    flex: 1;
+    min-width: 300px;
+}
+
+.product-info h2 {
+    margin-top: 0;
+    font-size: 28px;
+    color: #222;
+}
+
+.product-info p {
+    margin: 8px 0;
+    font-size: 16px;
+}
+
+.selectors {
+    margin: 20px 0;
+}
+
+.selectors label {
+    display: block;
+    font-weight: bold;
+    margin-top: 10px;
+    margin-bottom: 5px;
+}
+
+.selectors select {
+    width: 100%;
+    padding: 8px;
+    font-size: 16px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+}
+
+.add-to-cart-btn {
+    padding: 12px 20px;
+    font-size: 16px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.add-to-cart-btn:hover {
+    background-color: #0056b3;
+}
+
+.reviews-section {
+    margin-top: 40px;
+    border-top: 1px solid #ddd;
+    padding-top: 20px;
+}
+
+.reviews-section h3 {
+    font-size: 22px;
+    margin-bottom: 10px;
+}
+
+.reviews-section p {
+    background-color: #f9f9f9;
+    padding: 12px;
+    margin-bottom: 8px;
+    border-radius: 5px;
+}
+
+.similar-products {
+    margin-top: 40px;
+    border-top: 1px solid #ddd;
+    padding-top: 20px;
+}
+
+.similar-products h3 {
+    font-size: 22px;
+    margin-bottom: 15px;
+}
+
+.product-suggestions {
+    display: flex;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+
+.suggestion-card {
+    width: 160px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    overflow: hidden;
+    text-align: center;
+    cursor: pointer;
+    background-color: #fff;
+    transition: box-shadow 0.3s ease;
+}
+
+.suggestion-card:hover {
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.suggestion-card img {
+    width: 100%;
+    height: 160px;
+    object-fit: cover;
+}
+
+.suggestion-card p {
+    margin: 10px 0;
+    padding: 0 8px;
+    font-size: 14px;
+}
