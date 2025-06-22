@@ -9,6 +9,7 @@ import CDWEB.watch.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
@@ -28,6 +29,7 @@ public class OrderController {
 
 
     @GetMapping
+    @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<List<OrderDetails>> getAllOrders() {
         List<OrderDetails> orders = orderService.getAllOrders();
         String contentRange = "orders 0-" + (orders.size() - 1) + "/" + orders.size();
@@ -52,12 +54,14 @@ public class OrderController {
     }
 
     @PostMapping("/update-payment")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<?> updatePaymentStatus(@RequestBody Map<String,String> request){
         Map<String,String> response = orderService.updateStatus(request.get("paymentIntent"),request.get("status"));
         return new ResponseEntity<>(response,HttpStatus.OK);
     }
 
     @PostMapping("/cancel/{id}")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<?> cancelOrder(@PathVariable UUID id,Principal principal){
         orderService.cancelOrder(id,principal);
         return new ResponseEntity<>(HttpStatus.OK);

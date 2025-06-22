@@ -34,7 +34,7 @@ public class ProductMapper {
 
         Category category = categoryService.getCategory(productDto.getCategoryId());
         if(null != category){
-
+            product.setCategory(category);
             UUID categoryTypeId = productDto.getCategoryTypeId();
 
             CategoryType categoryType = category.getCategoryTypes().stream().filter(categoryType1 -> categoryType1.getId().equals(categoryTypeId)).findFirst().orElse(null);
@@ -100,8 +100,8 @@ public class ProductMapper {
                 .description(product.getDescription())
                 .slug(product.getSlug())
                 .thumbnail(getProductThumbnail(product.getResources()))
-                .categoryId(product.getCategoryType() != null ? product.getCategoryType().getId() : null)
-                .categoryName(product.getCategoryType() != null ? product.getCategoryType().getName() : null)
+                .categoryId(product.getCategory() != null ? product.getCategory().getId() : null)
+                .categoryName(product.getCategory() != null ? product.getCategory().getName() : null)
                 .categoryTypeId(product.getCategoryType() != null ? product.getCategoryType().getId() : null)
                 .categoryTypeName(product.getCategoryType() != null ? product.getCategoryType().getName() : null)
                 .variants(mapProductVariantListToDto(product.getProductVariants()))

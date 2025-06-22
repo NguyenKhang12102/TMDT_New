@@ -1,5 +1,5 @@
 import React from 'react'
-import { Admin, fetchUtils, Resource, withLifecycleCallbacks } from 'react-admin'
+import { Admin, fetchUtils, Resource, withLifecycleCallbacks, CustomRoutes, Menu, MenuItemLink } from 'react-admin'
 import simpleRestProvider from "ra-data-simple-rest";
 import ProductList from './ProductList.jsx';
 import EditProduct from './EditProduct';
@@ -11,6 +11,13 @@ import OrderList from "./Order/OrderList.jsx";
 import OrderShow from "./Order/OrderShow.jsx";
 import UserList from './User/UserList';
 import UserShow from './User/UserShow';
+import Dashboard from './Dashboard.jsx';
+import { Route } from 'react-router-dom';
+import DashboardIcon from '@mui/icons-material/Dashboard';
+import ProductIcon from '@mui/icons-material/Storefront';
+import CategoryIcon from '@mui/icons-material/Category';
+import OrderIcon from '@mui/icons-material/ShoppingCart';
+import UserIcon from '@mui/icons-material/People';
 
 const httpClient = (url, options = {}) => {
     const token = localStorage.getItem('authToken');
@@ -70,9 +77,23 @@ const dataProvider = withLifecycleCallbacks(
     ]
 );
 
+// Custom Menu Component
+const MyMenu = (props) => (
+    <Menu {...props}>
+        <MenuItemLink to="/dashboard" primaryText="Dashboard" leftIcon={<DashboardIcon />} />
+        <MenuItemLink to="/products" primaryText="Products" leftIcon={<ProductIcon />} />
+        <MenuItemLink to="/category" primaryText="Categories" leftIcon={<CategoryIcon />} />
+        <MenuItemLink to="/order" primaryText="Orders" leftIcon={<OrderIcon />} />
+        <MenuItemLink to="/user" primaryText="Users" leftIcon={<UserIcon />} />
+    </Menu>
+);
+
 export const AdminPanel = () => {
     return (
-        <Admin dataProvider={dataProvider} basename='/admin'>
+        <Admin dataProvider={dataProvider} basename='/admin' menu={MyMenu}>
+            <CustomRoutes>
+                <Route path="/dashboard" element={<Dashboard />} />
+            </CustomRoutes>
             <Resource name='products' list={ProductList} edit={EditProduct} create={CreateProduct} />
             <Resource name='category' list={CategoryList} edit={CategoryEdit} />
             <Resource

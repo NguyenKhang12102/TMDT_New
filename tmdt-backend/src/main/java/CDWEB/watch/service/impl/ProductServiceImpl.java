@@ -60,7 +60,7 @@ public class ProductServiceImpl implements ProductService {
             throw new ResourceNotFoundEx("Product Not Found!");
         }
         ProductDto productDto = productMapper.mapProductToDto(product);
-        productDto.setCategoryId(product.getCategoryType().getId());
+        productDto.setCategoryId(product.getCategory().getId());
         productDto.setCategoryTypeId(product.getCategoryType().getId());
         productDto.setVariants(productMapper.mapProductVariantListToDto(product.getProductVariants()));
         productDto.setProductResources(productMapper.mapProductResourcesListDto(product.getResources()));
@@ -71,7 +71,7 @@ public class ProductServiceImpl implements ProductService {
     public ProductDto getProductById(UUID id) {
         Product product= productRepository.findById(id).orElseThrow(()-> new ResourceNotFoundEx("Product Not Found!"));
         ProductDto productDto = productMapper.mapProductToDto(product);
-        productDto.setCategoryId(product.getCategoryType().getId());
+        productDto.setCategoryId(product.getCategory().getId());
         productDto.setCategoryTypeId(product.getCategoryType().getId());
         productDto.setVariants(productMapper.mapProductVariantListToDto(product.getProductVariants()));
         productDto.setProductResources(productMapper.mapProductResourcesListDto(product.getResources()));
@@ -95,16 +95,6 @@ public class ProductServiceImpl implements ProductService {
                 .orElseThrow(() -> new Exception("Không tìm thấy sản phẩm với id: " + id));
         productRepository.delete(product);
     }
-
-    @Override
-    public List<ProductDto> getProductsByCategoryTypeId(UUID typeId) {
-        List<Product> products = productRepository.findAll(
-                ProductSpecification.hasCategoryTypeId(typeId)
-        );
-        return productMapper.getProductDtos(products);
-    }
-
-
 
 
 }

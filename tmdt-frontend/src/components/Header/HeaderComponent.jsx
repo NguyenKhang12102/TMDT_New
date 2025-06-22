@@ -11,7 +11,7 @@ import {
 import { NavLink, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import NotificationPanel from '../Notification/Notification.jsx';
-import { fetchCategories } from  '../../api/fetchCategories.js';
+import { fetchCategories } from '../../api/fetchCategories.js';
 import { loadCategories } from '../../store/features/category';
 import { setLoading } from '../../store/features/common';
 import { logout } from '../../store/features/authSlice';
@@ -21,7 +21,7 @@ import {countCartItems} from "../../store/features/cart.js";
 import Cart from '../../pages/Cart/Cart.jsx';
 import {selectShowCart, setShowCart} from "../../store/features/uiSlice.jsx";
 import "../../components/Header/headerComponent.css";
-import logo from "../../assets/logo/logo.png";
+
 
 const HeaderComponent = () => {
     const dispatch = useDispatch();
@@ -89,14 +89,11 @@ const HeaderComponent = () => {
             >
                 <div className="relative flex items-center justify-between w-full px-6">
                     <NavLink to="/" className="flex items-center gap-2 text-2xl font-bold text-black tracking-widest">
-                            <img
-                                src={logo}
-                                alt="Triple D Logo"
-                                height={50}
-                                width={40}
-                                className="ml-[14px] -mb-[5px]"
-                            />
-                            <p className="">Triple D</p>
+                        <img
+                            src="/logo.jpg"
+                            alt="Logo"
+                            className="h-14 w-auto object-contain"
+                        />
                     </NavLink>
 
                     <nav
@@ -104,7 +101,14 @@ const HeaderComponent = () => {
                         <NavLink to="/"
                                  className={({isActive}) => isActive ? 'text-black' : 'text-gray-500 hover:text-black'}>Trang
                             chủ</NavLink>
-                        <NavLink to="/products" className="text-gray-500 hover:text-black">Sản phẩm</NavLink>
+                        {categories?.map((cat, idx) => (
+                            <NavLink
+                                key={cat.code + idx}
+                                to={`/${cat.code.toLowerCase()}`}
+                                className={({isActive}) => isActive ? 'text-black' : 'text-gray-500 hover:text-black'}>
+                                {cat.name}
+                            </NavLink>
+                        ))}
                         <NavLink to="/aboutus" className="text-gray-500 hover:text-black">Giới thiệu</NavLink>
                         <NavLink to="/services" className="text-gray-500 hover:text-black">Dịch vụ</NavLink>
                         <NavLink to="/contact" className="text-gray-500 hover:text-black">Liên hệ</NavLink>
