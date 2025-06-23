@@ -64,7 +64,7 @@ public class WebSecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(publicApis).permitAll()
                         .requestMatchers("/v3/api-docs/**", "/swagger-ui/**").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/api/products/**", "/api/category/**", "/api/order", "api/category-types","/api/products/by-category-type/**").permit                     
+                        .requestMatchers(HttpMethod.GET, "/api/products/**", "/api/category/**", "/api/order", "/api/category-types","/api/products/by-category-type/**").permitAll()                     
                         .requestMatchers(HttpMethod.POST, "/api/products/**", "/api/category/**").permitAll()
                         .requestMatchers(HttpMethod.PUT, "/api/products/**", "/api/category/**").permitAll()
                         .requestMatchers("/api/order/**").permitAll()
