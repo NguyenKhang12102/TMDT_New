@@ -19,11 +19,13 @@ public class ProductMapper {
     @Autowired
     private CategoryService categoryService;
 
-    public Product mapToProductEntity(ProductDto productDto){
+    public Product mapToProductEntity(ProductDto productDto) {
         Product product = new Product();
-        if(null != productDto.getId()){
+
+        if (productDto.getId() != null) {
             product.setId(productDto.getId());
         }
+
         product.setName(productDto.getName());
         product.setDescription(productDto.getDescription());
         product.setBrand(productDto.getBrand());
@@ -32,27 +34,38 @@ public class ProductMapper {
         product.setRating(productDto.getRating());
         product.setSlug(productDto.getSlug());
 
-        Category category = categoryService.getCategory(productDto.getCategoryId());
-        if(null != category){
+        // ✅ Bắt buộc phải có categoryId
+        if (productDto.getCategoryId() != null) {
+            Category category = categoryService.getCategory(productDto.getCategoryId());
 
-            UUID categoryTypeId = productDto.getCategoryTypeId();
+            if (category != null) {
+                product.setCategory(category); // ✅ PHẢI SET
 
-            CategoryType categoryType = category.getCategoryTypes().stream().filter(categoryType1 -> categoryType1.getId().equals(categoryTypeId)).findFirst().orElse(null);
-            product.setCategoryType(categoryType);
+                // ✅ Lấy categoryType từ category nếu có
+                if (productDto.getCategoryTypeId() != null) {
+                    CategoryType categoryType = category.getCategoryTypes().stream()
+                            .filter(ct -> ct.getId().equals(productDto.getCategoryTypeId()))
+                            .findFirst()
+                            .orElse(null);
+
+                    product.setCategoryType(categoryType); // ✅ PHẢI SET
+                }
+            }
         }
 
-        if(null != productDto.getVariants()){
-            product.setProductVariants(mapToProductVariant(productDto.getVariants(),product));
+        // ✅ Gán biến thể
+        if (productDto.getVariants() != null) {
+            product.setProductVariants(mapToProductVariant(productDto.getVariants(), product));
         }
 
-        if(null != productDto.getProductResources()){
-            product.setResources(mapToProductResources(productDto.getProductResources(),product));
+        // ✅ Gán ảnh
+        if (productDto.getProductResources() != null) {
+            product.setResources(mapToProductResources(productDto.getProductResources(), product));
         }
-
-
 
         return product;
     }
+
 
     private List<Resources> mapToProductResources(List<ProductResourceDto> productResources, Product product) {
 

@@ -1,6 +1,7 @@
 import React from 'react';
 import { ArrowUp } from 'lucide-react'; // Nếu bạn chưa cài: npm install lucide-react
-
+import { CiDeliveryTruck } from "react-icons/ci";
+import { FaProductHunt } from "react-icons/fa";
 const ProcessSteps = () => {
     return (
         <section className="py-16 bg-gray-50 rounded-lg mx-4 md:mx-8">
@@ -25,7 +26,7 @@ const ProcessSteps = () => {
                     {/* Step 2 */}
                     <div className="text-center space-y-4">
                         <div className="w-16 h-16 bg-white rounded-full flex items-center justify-center mx-auto shadow-md">
-                            <img src="/placeholder.svg?height=24&width=24" alt="Choose" width={24} height={24} />
+                            <FaProductHunt  size={32}/>
                         </div>
                         <h3 className="font-bold">CHỌN SẢN PHẨM</h3>
                         <p className="text-gray-600">
@@ -36,7 +37,7 @@ const ProcessSteps = () => {
                     {/* Step 3 */}
                     <div className="text-center space-y-4">
                         <div className="w-16 h-16 bg-white rounded-full flex items-center justify-center mx-auto shadow-md">
-                            <img src="/placeholder.svg?height=24&width=24" alt="Delivery" width={24} height={24} />
+                            <CiDeliveryTruck size={32} />
                         </div>
                         <h3 className="font-bold">GIAO HÀNG</h3>
                         <p className="text-gray-600">

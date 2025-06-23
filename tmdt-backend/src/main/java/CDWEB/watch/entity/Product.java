@@ -54,10 +54,10 @@ public class Product implements Serializable {
     @Column(nullable = false)
     private Date updatedAt;
 
-    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ProductVariant> productVariants;
 
-    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Resources> resources;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -65,7 +65,16 @@ public class Product implements Serializable {
     @JsonIgnore
     private CategoryType categoryType;
 
-    // Ensure JPA query access by categoryTypeId
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "category_id", nullable = false)
+    @JsonIgnore
+    private Category category;
+
+
+
+
+
+    // Truy cập category_type_id cho DTO hoặc logic khác
     public UUID getCategoryTypeId() {
         return categoryType != null ? categoryType.getId() : null;
     }
