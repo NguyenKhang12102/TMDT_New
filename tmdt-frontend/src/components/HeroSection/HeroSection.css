@@ -1,0 +1,151 @@
+.hero-section {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    background-size: cover;
+    background-position: center;
+    text-align: left;
+    width: 100%;
+    height: 80vh;
+    overflow: hidden;
+}
+
+.overlay {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background-color: rgba(0, 0, 0, 0.3);
+}
+
+.hero-content {
+    position: relative;
+    padding: 0 2.5rem;
+    z-index: 10;
+}
+
+@media (min-width: 1024px) {
+    .hero-content {
+        padding: 0 6rem;
+    }
+}
+
+.hero-text h2 {
+    font-size: 1.5rem;
+    color: white;
+}
+
+.hero-title {
+    margin-top: 1rem;
+    font-size: 3.75rem;
+    color: white;
+    font-weight: bold;
+    max-width: 36rem;
+}
+
+.hero-subtitle {
+    margin-top: 1rem;
+    font-size: 1.5rem;
+    color: white;
+    max-width: 36rem;
+}
+
+.hero-button {
+    margin-top: 1.5rem;
+    width: 11rem;
+    height: 3rem;
+    background-color: #ffffff;
+    color: #000000;
+    border: 1px solid black;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+/* Navigation buttons */
+.hero-nav {
+    position: absolute;
+    top: 50%;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    padding: 0 1rem;
+    transform: translateY(-50%);
+    pointer-events: none; /* Allow content underneath to be clickable */
+}
+
+.nav-btn {
+    display: flex;
+    background-color: rgba(255, 255, 255, 0.8);
+    border: none;
+    border-radius: 50%;
+    font-size: 1.5rem;
+    width: 2.5rem;
+    height: 2.5rem;
+    cursor: pointer;
+    opacity: 0;
+    transform: translateX(-50px);
+    transition: all 0.4s ease;
+    pointer-events: auto;
+    justify-content: center;
+    align-content: center;
+}
+
+.icon-center {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 3.5rem;
+    color: #000000;
+    background: #bababa;
+    border: none;
+    border-radius: 50%;
+    width: 3.5rem;
+    height: 3.5rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition:
+            color 0.3s ease,
+            background-color 0.3s ease,
+            opacity 0.4s ease,
+            transform 0.4s ease;
+    z-index: 20;
+    opacity: 0;
+    pointer-events: none; /* ẩn khi không hover */
+}
+
+.hero-section:hover .icon-center {
+    opacity: 1;
+    pointer-events: auto; /* bật sự kiện khi hover */
+    transform: translateY(-50%) scale(1);
+}
+
+.icon-center.left {
+    left: 1.5rem;
+    transform: translateY(-50%) translateX(-20px);
+}
+
+.icon-center.right {
+    right: 1.5rem;
+    transform: translateY(-50%) translateX(20px);
+}
+
+.hero-section:hover .icon-center.left {
+    transform: translateY(-50%) translateX(0);
+}
+
+.hero-section:hover .icon-center.right {
+    transform: translateY(-50%) translateX(0);
+}
+
+.icon-center:hover {
+    color: white;
+    background: rgb(207, 5, 5);
+}
+
+
+

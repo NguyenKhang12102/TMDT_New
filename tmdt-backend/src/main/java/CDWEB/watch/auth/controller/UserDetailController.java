@@ -1,0 +1,91 @@
+package CDWEB.watch.auth.controller;
+
+
+import CDWEB.watch.auth.dto.UserDetailsDto;
+import CDWEB.watch.auth.entities.User;
+import CDWEB.watch.auth.repositories.UserDetailRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.web.bind.annotation.*;
+
+import java.security.Principal;
+import java.util.List;
+import java.util.UUID;
+
+@RestController
+@CrossOrigin
+@RequestMapping("/api/user")
+public class UserDetailController {
+
+    @Autowired
+    private UserDetailsService userDetailsService;
+
+
+    @Autowired
+    private UserDetailRepository userRepository;
+
+
+    @GetMapping("/profile")
+    public ResponseEntity<UserDetailsDto> getUserProfile(Principal principal){
+        User user = (User) userDetailsService.loadUserByUsername(principal.getName());
+
+        if(null == user){
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        }
+
+        UserDetailsDto userDetailsDto = UserDetailsDto.builder()
+                .firstName(user.getFirstName())
+                .lastName(user.getLastName())
+                .email(user.getEmail())
+                .id(user.getId())
+                .phoneNumber(user.getPhoneNumber())
+                .addressList(user.getAddressList())
+                .authorityList(user.getAuthorities().toArray()).build();
+
+        return new ResponseEntity<>(userDetailsDto, HttpStatus.OK);
+
+    }
+    @GetMapping
+    public ResponseEntity<List<User>> getAllUsers() {
+        List<User> users = userRepository.findAll();
+        String contentRange = "users 0-" + (users.size() - 1) + "/" + users.size();
+        return ResponseEntity.ok()
+                .header("Content-Range", contentRange)
+                .body(users);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<User> getUserById(@PathVariable("id") UUID id) {
+        User user = userRepository.findById(id).orElse(null);
+        if (user == null) return ResponseEntity.notFound().build();
+        return ResponseEntity.ok(user);
+    }
+
+    // Update user
+    @PutMapping("/{id}")
+    public ResponseEntity<User> updateUser(@PathVariable("id") UUID id, @RequestBody User update) {
+        User user = userRepository.findById(id).orElse(null);
+        if (user == null) return ResponseEntity.notFound().build();
+        // Cập nhật các trường cho phép
+        user.setFirstName(update.getFirstName());
+        user.setLastName(update.getLastName());
+        user.setEmail(update.getEmail());
+        user.setPhoneNumber(update.getPhoneNumber());
+        // ... các trường khác nếu cần
+        userRepository.save(user);
+        return ResponseEntity.ok(user);
+    }
+
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> disableUser(@PathVariable("id") UUID id) {
+        User user = userRepository.findById(id).orElse(null);
+        if (user == null) return ResponseEntity.notFound().build();
+        user.setEnabled(false);
+        userRepository.save(user);
+        return ResponseEntity.ok().build();
+    }
+
+}

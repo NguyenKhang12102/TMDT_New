@@ -1,0 +1,55 @@
+.store-list {
+    text-align: center;
+    padding: 40px 20px;
+    background-color: #ffffff;
+    font-family: Arial, sans-serif;
+}
+
+.store-list h2 {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 30px;
+}
+
+.store-grid {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px;
+}
+
+.store-card {
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    width: 300px;
+    text-align: left;
+    overflow: hidden;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.store-header {
+    background-color: #f1f1f1;
+    padding: 12px 16px;
+    font-weight: 600;
+    color: #333;
+    border-bottom: 1px solid #ddd;
+}
+
+.store-body {
+    padding: 12px 16px;
+    color: #222;
+}
+
+.map-link {
+    display: inline-flex;
+    align-items: center;
+    margin-top: 8px;
+    color: #007bff;
+    font-size: 14px;
+    text-decoration: none;
+}
+
+.map-icon {
+    margin-right: 6px;
+    color: #007bff;
+}

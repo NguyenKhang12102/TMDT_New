@@ -1,0 +1,216 @@
+
+
+/* Quick View Modal */
+
+.modal-overlay {
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0,0,0,0.6);
+    z-index: 999;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.modal-contentt {
+    background: #fff;
+    width: 90%;
+    max-width: 1000px;
+    border-radius: 10px;
+    position: relative;
+    padding: 20px;
+    max-height: 90vh;
+    overflow-y: auto;
+
+}
+
+.modal-close-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+}
+
+.modal-body {
+    display: flex;
+    gap: 30px;
+}
+
+.modal-image-section {
+    flex: 1;
+    text-align: center;
+    position: relative;
+}
+
+.modal-main-image {
+    width: 100%;
+    max-height: 400px;
+    object-fit: cover;
+    border-radius: 6px;
+}
+
+.thumbnail-list {
+    display: flex;
+    gap: 8px;
+    margin-top: 12px;
+    justify-content: center;
+}
+
+.thumbnail {
+    width: 60px;
+    height: 60px;
+    object-fit: cover;
+    border: 2px solid transparent;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.thumbnail.active {
+    border-color: #000;
+}
+
+.arrow-button {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(255,255,255,0.7);
+    border: none;
+    cursor: pointer;
+    padding: 6px;
+    border-radius: 50%;
+}
+
+.arrow-button:first-of-type {
+    left: -10px;
+}
+
+.arrow-button:last-of-type {
+    right: -10px;
+}
+
+.modal-info-section {
+    flex: 1;
+}
+
+.modal-title {
+    font-size: 22px;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.modal-code,
+.modal-status,
+.modal-brand {
+    font-size: 14px;
+    margin-bottom: 6px;
+}
+
+.modal-price {
+    font-size: 20px;
+    color: #e60023;
+    margin: 10px 0;
+    font-weight: bold;
+}
+
+.modal-price .original {
+    text-decoration: line-through;
+    margin-left: 10px;
+    color: #888;
+    font-weight: normal;
+}
+
+.modal-price .discount-percent {
+    color: #00a650;
+    font-size: 14px;
+    margin-left: 10px;
+}
+
+.label {
+    font-weight: 600;
+    margin-top: 15px;
+}
+
+.color-options,
+.size-options {
+    display: flex;
+    gap: 10px;
+    margin: 8px 0;
+}
+
+.color-options button,
+.size-options button {
+    padding: 6px 12px;
+    border: 1px solid #ccc;
+    background: #fff;
+    cursor: pointer;
+    border-radius: 4px;
+}
+
+.color-options .selected,
+.size-options .selected {
+    background: #000;
+    color: #fff;
+    border-color: #000;
+}
+
+.quantity-control {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 8px 0;
+}
+
+.quantity-control button {
+    padding: 6px 10px;
+    font-size: 16px;
+    cursor: pointer;
+    background: #f0f0f0;
+    border: 1px solid #ccc;
+}
+
+.quantity-control input {
+    width: 40px;
+    text-align: center;
+    border: 1px solid #ccc;
+    padding: 4px;
+}
+
+.add-to-cart {
+    margin-top: 20px;
+    padding: 10px 20px;
+    background: #000;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+    border-radius: 4px;
+    font-weight: bold;
+}
+
+.share-section {
+    margin-top: 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 14px;
+}
+
+.share-section i {
+    width: 24px;
+    height: 24px;
+    background: #eee;
+    border-radius: 50%;
+}
+
+.view-detail {
+    display: inline-block;
+    margin-top: 20px;
+    color: #104e97;
+    text-decoration: underline;
+    cursor: pointer;
+    background-color: #8399c8;
+    border-radius: 8px;
+    padding: 5px;
+}
+
