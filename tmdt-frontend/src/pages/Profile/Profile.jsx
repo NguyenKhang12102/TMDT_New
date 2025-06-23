@@ -72,7 +72,7 @@ const ProfilePage = () => {
 
             if (res.ok) {
                 const data = JSON.parse(text);
-                alert(`Đổi thành công! Nhận được voucher ${data.discountPercentage}%`);
+                alert(`🎉 Đổi thành công! Bạn nhận được voucher ${data.discountPercentage}% - Mã: ${data.code}`);
                 window.location.reload();
             } else {
                 alert(text); // ví dụ: "Bạn không đủ điểm để đổi voucher này."
