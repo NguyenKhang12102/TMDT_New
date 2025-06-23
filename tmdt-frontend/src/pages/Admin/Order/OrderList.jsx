@@ -1,13 +1,15 @@
 import React from 'react'
-import { List, Datagrid, TextField, DateField, NumberField, ReferenceField, ShowButton, EditButton } from 'react-admin'
+import { List, Datagrid, TextField, DateField, NumberField, ReferenceField, ShowButton, FunctionField } from 'react-admin'
+import EditableOrderStatusField from './EditableOrderStatusField';
+
 
 const OrderList = props => (
     <List {...props}>
-        <Datagrid>
+        <Datagrid rowClick={false}>
             <TextField source="id" />
             <DateField source="orderDate" label="Ngày đặt" />
             <NumberField source="totalAmount" label="Tổng tiền" />
-            <TextField source="orderStatus" label="Trạng thái" />
+            <FunctionField label="Trạng thái" render={record => <EditableOrderStatusField record={record} source="orderStatus" />} />
             <TextField source="shipmentNumber" label="Mã vận đơn" />
             <DateField source="expectedDeliveryDate" label="Ngày giao dự kiến" />
             <ShowButton />

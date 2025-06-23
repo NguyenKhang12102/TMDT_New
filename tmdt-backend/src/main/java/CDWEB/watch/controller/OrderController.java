@@ -6,6 +6,7 @@ import CDWEB.watch.auth.dto.OrderResponse;
 import CDWEB.watch.dto.OrderDetails;
 import CDWEB.watch.dto.OrderRequest;
 import CDWEB.watch.service.OrderService;
+import org.apache.coyote.BadRequestException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -53,8 +54,12 @@ public class OrderController {
 
     @PostMapping("/update-payment")
     public ResponseEntity<?> updatePaymentStatus(@RequestBody Map<String,String> request){
-        Map<String,String> response = orderService.updateStatus(request.get("paymentIntent"),request.get("status"));
-        return new ResponseEntity<>(response,HttpStatus.OK);
+        try{
+            Map<String,String> response = orderService.updateStatus(request.get("paymentIntent"),request.get("status"));
+            return new ResponseEntity<>(response,HttpStatus.OK);
+        } catch (BadRequestException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
     }
 
     @PostMapping("/cancel/{id}")
@@ -69,4 +74,13 @@ public class OrderController {
         return new ResponseEntity<>(orders, HttpStatus.OK);
     }
 
+    @PostMapping("/update-status/{id}")
+    public ResponseEntity<?> updateOrderStatus(@PathVariable UUID id, @RequestBody Map<String,String> request){
+        try {
+            orderService.updateOrderStatus(id,request.get("status"));
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (BadRequestException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+    }
 }
