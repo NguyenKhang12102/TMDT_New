@@ -82,9 +82,7 @@ const ProfilePage = () => {
             alert("Đã xảy ra lỗi khi gọi API đổi điểm.");
         }
     };
-
-
-
+    
 
     const latestAddress = user?.addressList?.[user.addressList.length - 1] ?? null;
     const hasAvatar = Boolean(user?.avatarUrl);
