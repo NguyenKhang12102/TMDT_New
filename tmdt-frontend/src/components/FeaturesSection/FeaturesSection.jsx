@@ -55,7 +55,7 @@ const FeaturesSection = () => {
                     {/* Right Image */}
                     <div className="flex justify-center items-center">
                         <img
-                            src="/placeholder.svg?height=400&width=400"
+                            src="https://media.istockphoto.com/id/491236942/vi/vec-to/m%C3%A1y-in-3d.jpg?s=612x612&w=0&k=20&c=1co7C1-dQsjgYfcXd8q7CuM-nEaJAf0Dye4md9-200c="
                             alt="3D Printer Features"
                             width={400}
                             height={400}
