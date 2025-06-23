@@ -43,7 +43,11 @@ public class VoucherController {
         }
 
         Voucher voucher = voucherService.redeemVoucher(user, points, discount);
-        return ResponseEntity.ok(voucher);
+        return ResponseEntity.ok(Map.of(
+                "voucherId", voucher.getId(),
+                "code", voucher.getCode(),                        // thêm dòng này
+                "discountPercentage", voucher.getDiscountPercentage()
+        ));
     }
 
     @GetMapping("/verify")
