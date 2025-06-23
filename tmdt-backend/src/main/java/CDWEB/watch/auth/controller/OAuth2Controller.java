@@ -34,7 +34,7 @@ public class OAuth2Controller {
             user = oAuth2Service.createUser(oAuth2User,"google");
         }
 
-        String token = jwtTokenHelper.generateToken(user.getUsername());
+        String token = jwtTokenHelper.generateToken(user);
         System.out.println("OAuth2 User Attributes: " + oAuth2User.getAttributes());
         response.sendRedirect("http://localhost:3000/oauth2/callback?token="+token);
 

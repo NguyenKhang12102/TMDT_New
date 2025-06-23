@@ -9,7 +9,6 @@ import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -19,7 +18,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Product implements Serializable {
+public class Product {
 
     @Id
     @GeneratedValue
@@ -31,9 +30,9 @@ public class Product implements Serializable {
     @Column
     private String description;
 
+
     @Column(nullable = false)
     private BigDecimal price;
-
     @Column(nullable = false)
     private String brand;
 
@@ -46,47 +45,42 @@ public class Product implements Serializable {
     @Column(nullable = false, unique = true)
     private String slug;
 
-    @Temporal(TemporalType.TIMESTAMP)
     @Column(nullable = false, updatable = false)
-    private Date createdAt;
-
     @Temporal(TemporalType.TIMESTAMP)
+    private java.util.Date createdAt;
+
     @Column(nullable = false)
-    private Date updatedAt;
+    @Temporal(TemporalType.TIMESTAMP)
+    private java.util.Date updatedAt;
 
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ProductVariant> productVariants;
-
-    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Resources> resources;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "category_type_id", nullable = false)
-    @JsonIgnore
-    private CategoryType categoryType;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id", nullable = false)
     @JsonIgnore
     private Category category;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "categoryType_id",nullable = false)
+    @JsonIgnore
+    private CategoryType categoryType;
 
-
-
-
-    // Truy cập category_type_id cho DTO hoặc logic khác
-    public UUID getCategoryTypeId() {
-        return categoryType != null ? categoryType.getId() : null;
-    }
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Resources> resources;
 
     @PrePersist
     protected void onCreate() {
-        createdAt = new Date();
+        createdAt = new java.util.Date();
         updatedAt = createdAt;
     }
 
     @PreUpdate
     protected void onUpdate() {
-        updatedAt = new Date();
+        updatedAt = new java.util.Date();
+    }
+
+    public UUID getCategoryTypeId() {
+        return categoryType != null ? categoryType.getId() : null;
     }
 }

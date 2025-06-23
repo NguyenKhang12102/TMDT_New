@@ -1,5 +1,7 @@
-import React from 'react';
-import { Admin, fetchUtils, Resource, withLifecycleCallbacks } from 'react-admin';
+
+import React from 'react'
+import { Admin, fetchUtils, Resource, withLifecycleCallbacks, CustomRoutes, Menu, MenuItemLink } from 'react-admin'
+
 import simpleRestProvider from "ra-data-simple-rest";
 import { fileUploadAPI } from '../../api/fileUpload';
 import ProductList from './ProductList.jsx';
@@ -11,7 +13,15 @@ import OrderList from "./Order/OrderList.jsx";
 import OrderShow from "./Order/OrderShow.jsx";
 import UserList from './User/UserList';
 import UserShow from './User/UserShow';
-import AdminDashboard from './AdminDashboard.jsx'; // ✅ thêm dòng này
+
+import AdminDashboard from './Dashboard.jsx';
+import DashboardIcon from '@mui/icons-material/Dashboard';
+import ProductIcon from '@mui/icons-material/Storefront';
+import CategoryIcon from '@mui/icons-material/Category';
+import OrderIcon from '@mui/icons-material/ShoppingCart';
+import UserIcon from '@mui/icons-material/People';
+
+
 
 const API_BASE_URL = "http://localhost:8080";
 
@@ -89,6 +99,17 @@ const wrappedProvider = withLifecycleCallbacks(
             }
         }
     ]
+);
+
+// Custom Menu Component (No longer used directly, but keeping imports for now)
+const MyMenu = (props) => (
+    <Menu {...props}>
+        <MenuItemLink to="/dashboard" primaryText="Dashboard" leftIcon={<DashboardIcon />} />
+        <MenuItemLink to="/products" primaryText="Products" leftIcon={<ProductIcon />} />
+        <MenuItemLink to="/category" primaryText="Categories" leftIcon={<CategoryIcon />} />
+        <MenuItemLink to="/order" primaryText="Orders" leftIcon={<OrderIcon />} />
+        <MenuItemLink to="/user" primaryText="Users" leftIcon={<UserIcon />} />
+    </Menu>
 );
 
 export const AdminPanel = () => {

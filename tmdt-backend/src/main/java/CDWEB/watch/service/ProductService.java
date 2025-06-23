@@ -19,7 +19,6 @@ public interface ProductService {
 
     Product fetchProductById(UUID uuid) throws Exception;
 
-    List<ProductDto> getProductsByCategoryTypeId(UUID typeId);
 
     void deleteProduct(UUID id) throws Exception;
 }
