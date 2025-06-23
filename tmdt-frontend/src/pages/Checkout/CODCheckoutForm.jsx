@@ -8,13 +8,7 @@ import { useNavigate } from 'react-router-dom';
 import { clearCart } from '../../store/actions/cartAction.js';
 import { saveAddress } from '../../store/features/user.js';
 
-const CODCheckoutForm = ({  userId,
-                             addressId,
-                             newAddress,
-                             handleAddAddress,
-                             discount,
-                             voucherId,
-                             totalAmount }) => {
+const CODCheckoutForm = ({ userId, addressId, newAddress, handleAddAddress }) => {
     const cartItems = useSelector(selectCartItems);
     const dispatch = useDispatch();
     const navigate = useNavigate();
@@ -28,6 +22,7 @@ const CODCheckoutForm = ({  userId,
         try {
             let finalAddressId = addressId;
 
+            // Nếu có hàm handleAddAddress, gọi nó để lưu địa chỉ mới
             if (handleAddAddress) {
                 const addedAddress = await handleAddAddress();
                 if (addedAddress?.id) {
@@ -36,24 +31,8 @@ const CODCheckoutForm = ({  userId,
                 }
             }
 
-            const originalTotal = cartItems.reduce((total, item) => total + (item.subTotal || 0), 0);
-
-            const orderRequest = {
-                userId,
-                addressId: finalAddressId,
-                orderItemRequests: cartItems.map(item => ({
-                    productId: item.productId,
-                    productVariantId: item.productVariantId,
-                    quantity: item.quantity
-                })),
-                paymentMethod: "TIEN MAT",
-                discount, // % gửi lên
-                voucherId,
-                totalAmount: parseFloat(originalTotal), // ❗ gửi tổng gốc chưa giảm
-                orderDate: new Date(),
-                expectedDeliveryDate: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000)
-            };
-
+            const orderRequest = createOrderRequest(cartItems, userId, finalAddressId);
+            orderRequest.paymentMethod = "TIEN MAT";
 
             const res = await placeOrderAPI(orderRequest);
             if (res?.orderId) {
@@ -68,8 +47,7 @@ const CODCheckoutForm = ({  userId,
         } finally {
             dispatch(setLoading(false));
         }
-    }, [addressId, cartItems, dispatch, navigate, userId, handleAddAddress, discount, voucherId, totalAmount]);
-
+    }, [addressId, cartItems, dispatch, navigate, userId, handleAddAddress]);
 
     return (
         <form className='items-center p-2 mt-4 w-[320px]' onSubmit={handleSubmit}>

@@ -12,19 +12,15 @@ import { NavLink, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import NotificationPanel from '../Notification/Notification.jsx';
 import { fetchCategories } from  '../../api/fetchCategories.js';
-
 import { loadCategories } from '../../store/features/category.js';
 import { setLoading } from '../../store/features/common.js';
 import { logout } from '../../store/features/authSlice.jsx';
 import { logoutUser } from '../../store/features/user.js';
-
 import staticCategories from '../../data/staticCategories.js';
 import {countCartItems} from "../../store/features/cart.js";
 import Cart from '../../pages/Cart/Cart.jsx';
 import {selectShowCart, setShowCart} from "../../store/features/uiSlice.jsx";
-
 import "./headerComponent.css";
-
 import logo from "../../assets/logo/logo.png";
 
 const HeaderComponent = () => {
