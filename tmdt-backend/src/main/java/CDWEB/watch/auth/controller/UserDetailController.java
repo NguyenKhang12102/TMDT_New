@@ -1,6 +1,7 @@
 package CDWEB.watch.auth.controller;
 
 
+import CDWEB.watch.auth.dto.ChangePasswordRequest;
 import CDWEB.watch.auth.dto.UserDetailsDto;
 import CDWEB.watch.auth.entities.User;
 import CDWEB.watch.auth.repositories.UserDetailRepository;
@@ -8,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
@@ -22,6 +24,8 @@ public class UserDetailController {
     @Autowired
     private UserDetailsService userDetailsService;
 
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     @Autowired
     private UserDetailRepository userRepository;
@@ -88,5 +92,26 @@ public class UserDetailController {
         userRepository.save(user);
         return ResponseEntity.ok().build();
     }
+    @PutMapping("/change-password")
+    public ResponseEntity<?> changePassword(Principal principal,
+                                            @RequestBody ChangePasswordRequest request) {
+        // Lấy thông tin user từ token (principal)
+        User user = (User) userDetailsService.loadUserByUsername(principal.getName());
+        if (user == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("User not authenticated");
+        }
+
+        // Kiểm tra mật khẩu cũ
+        if (!passwordEncoder.matches(request.getOldPassword(), user.getPassword())) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Old password is incorrect");
+        }
+
+        // Mã hoá và cập nhật mật khẩu mới
+        user.setPassword(passwordEncoder.encode(request.getNewPassword()));
+        userRepository.save(user);
+
+        return ResponseEntity.ok("Password changed successfully");
+    }
+
 
 }
