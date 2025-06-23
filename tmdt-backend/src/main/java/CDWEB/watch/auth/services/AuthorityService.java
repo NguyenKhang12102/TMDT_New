@@ -18,10 +18,9 @@
         public List<Authority> getUserAuthority(){
             List<Authority> authorities=new ArrayList<>();
             Authority authority= authorityRepository.findByRoleCode("USER");
-            //   if (authority == null) {
+//            if (authority == null) {
 //                authority = createAuthority("USER", "Người mua hàng");
-            //    authority = createAuthority("ADMIN", "Người quản lí");
-         //   }
+//            }
 
             authorities.add(authority);
             return  authorities;

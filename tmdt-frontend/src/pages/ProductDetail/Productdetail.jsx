@@ -1,6 +1,6 @@
 import React, { useMemo, useState, useEffect, useCallback } from 'react';
 import { Link, useLoaderData } from 'react-router-dom';
-import { getProductByTypeId } from '../../api/fetchProducts';
+import { getProductBySlug } from '../../api/fetchProducts';
 import { useDispatch, useSelector } from 'react-redux';
 import ProductCard from '../ProductList/ProductCard.jsx';
 import { addItemToCartAction } from '../../store/actions/cartAction';
@@ -30,13 +30,14 @@ const ProductDetail = () => {
     }, [productCategory, product]);
 
     useEffect(() => {
-        getProductByTypeId(product?.categoryId, product?.categoryTypeId)
+        getProductBySlug(product?.slug)
             .then((res) => {
                 const filtered = res?.filter((item) => item?.id !== product?.id);
                 setSimilarProducts(filtered);
             })
             .catch(() => {});
     }, [product?.categoryId, product?.categoryTypeId, product?.id]);
+
 
     const addItemToCart = useCallback(() => {
         if (product?.stockQuantity <= 0) {

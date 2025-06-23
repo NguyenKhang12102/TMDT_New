@@ -11,10 +11,14 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.authentication.WebAuthenticationDetails;
 import org.springframework.web.filter.OncePerRequestFilter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 
 public class JWTAuthenticationFilter extends OncePerRequestFilter {
+
+    private static final Logger logger = LoggerFactory.getLogger(JWTAuthenticationFilter.class);
 
     private final UserDetailsService userDetailsService;
     private final JWTTokenHelper jwtTokenHelper;
@@ -29,13 +33,13 @@ public class JWTAuthenticationFilter extends OncePerRequestFilter {
 
         String authHeader = request.getHeader("Authorization");
 
-        if(null == authHeader || !authHeader.startsWith("Bearer")){
+        if(null == authHeader || !authHeader.startsWith("Bearer ")){
+            logger.debug("No Bearer token found or malformed header. Proceeding without authentication for JWT filter.");
             filterChain.doFilter(request,response);
             return;
         }
 
-        try{
-        // Dăng nhập người dùng vào hệ thống Spring Security.
+        try {
             String authToken = jwtTokenHelper.getToken(request);
             if(null != authToken){
                 String userName = jwtTokenHelper.getUserNameFromToken(authToken);
@@ -44,16 +48,37 @@ public class JWTAuthenticationFilter extends OncePerRequestFilter {
 
                     if(jwtTokenHelper.validateToken(authToken,userDetails)) {
                         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
-                          authenticationToken.setDetails(new WebAuthenticationDetails(request));//Gắn thông tin chi tiết request vào token
-                        SecurityContextHolder.getContext().setAuthentication(authenticationToken);//Đăng nhập người dùng vào hệ thống bảo mật của Spring
-
+                        authenticationToken.setDetails(new WebAuthenticationDetails(request));
+                        SecurityContextHolder.getContext().setAuthentication(authenticationToken);
+                        logger.info("Successfully authenticated user: {}", userName);
+                    } else {
+                        logger.warn("JWT Token validation failed for user: {}", userName);
+                        response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                        response.setContentType("application/json");
+                        response.getWriter().write("{\"error\": \"Unauthorized\", \"message\": \"Invalid JWT token.\"}");
+                        return;
                     }
+                } else {
+                    logger.warn("Username could not be extracted from JWT token.");
+                    response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                    response.setContentType("application/json");
+                    response.getWriter().write("{\"error\": \"Unauthorized\", \"message\": \"Invalid JWT token: Username not found.\"}");
+                    return;
                 }
-
+            } else {
+                logger.warn("Auth token is null after extraction.");
+                response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                response.setContentType("application/json");
+                response.getWriter().write("{\"error\": \"Unauthorized\", \"message\": \"JWT token is null.\"}");
+                return;
             }
+
             filterChain.doFilter(request, response);
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            logger.error("Error during JWT authentication: {}", e.getMessage(), e);
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            response.setContentType("application/json");
+            response.getWriter().write("{\"error\": \"Unauthorized\", \"message\": \"Authentication failed: " + e.getMessage() + "\"}");
         }
     }
 }

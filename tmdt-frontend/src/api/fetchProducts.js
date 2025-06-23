@@ -1,49 +1,38 @@
 import axios from "axios";
-import { API_BASE_URL, API_URLS, getHeaders } from "./constant";
+import { API_BASE_URL, API_URLS } from "./constant"
 
-/**
- * Lấy sản phẩm theo categoryTypeId (ví dụ: "Chậu cây", "Trang trí", ...)
- */
-export const getProductByTypeId = async (typeId) => {
-    try {
-        const response = await axios.get(
-            `${API_BASE_URL}${API_URLS.GET_PRODUCTS_BY_CATEGORY_TYPE(typeId)}`,
-            {
-                headers: getHeaders(),
-            }
-        );
-        return response.data;
-    } catch (error) {
-        console.error("Lỗi khi gọi API theo categoryTypeId:", error);
-        return [];
-    }
-};
 
 export const getAllProducts = async (categoryId, typeId) => {
+    let url = API_BASE_URL + API_URLS.GET_PRODUCTS;
+
+    const params = new URLSearchParams();
+    if (categoryId) params.append("categoryId", categoryId);
+    if (typeId) params.append("typeId", typeId);
+
+    const fullUrl = params.toString() ? `${url}?${params.toString()}` : url;
+    console.log("Calling API:", fullUrl);
+
     try {
-        const response = await axios.get(`${API_BASE_URL}${API_URLS.GET_PRODUCTS}`, {
-            headers: getHeaders(),
-            params: {
-                ...(categoryId && { categoryId }),
-                ...(typeId && { typeId }),
-            },
-        });
-        return response.data;
-    } catch (error) {
-        console.error("❌ Lỗi khi gọi API tất cả sản phẩm:", error);
+        const result = await axios.get(fullUrl);
+        console.log("API response:", result.data);
+        return result.data;
+    } catch (err) {
+        console.error("API call error:", err);
         return [];
     }
 };
 
-export const getProductBySlug = async (slug) => {
-    try {
-        const response = await axios.get(`${API_BASE_URL}${API_URLS.GET_PRODUCTS}`, {
-            headers: getHeaders(),
-            params: { slug },
+
+export const getProductBySlug = async (slug)=>{
+    const url = API_BASE_URL + API_URLS.GET_PRODUCTS + `?slug=${slug}`;
+    try{
+        const result = await axios(url,{
+            method:"GET",
         });
-        return response.data?.[0] || null;
-    } catch (error) {
-        console.error("Lỗi khi gọi API theo slug:", error);
-        return null;
+
+        return result?.data?.[0];
     }
-};
+    catch(err){
+        console.error(err);
+    }
+}

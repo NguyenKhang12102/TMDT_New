@@ -34,31 +34,25 @@ public class ProductMapper {
         product.setRating(productDto.getRating());
         product.setSlug(productDto.getSlug());
 
-        // ✅ Bắt buộc phải có categoryId
         if (productDto.getCategoryId() != null) {
             Category category = categoryService.getCategory(productDto.getCategoryId());
 
             if (category != null) {
-                product.setCategory(category); // ✅ PHẢI SET
-
-                // ✅ Lấy categoryType từ category nếu có
+                product.setCategory(category);
                 if (productDto.getCategoryTypeId() != null) {
                     CategoryType categoryType = category.getCategoryTypes().stream()
                             .filter(ct -> ct.getId().equals(productDto.getCategoryTypeId()))
                             .findFirst()
                             .orElse(null);
 
-                    product.setCategoryType(categoryType); // ✅ PHẢI SET
+                    product.setCategoryType(categoryType);
                 }
             }
         }
-
-        // ✅ Gán biến thể
         if (productDto.getVariants() != null) {
             product.setProductVariants(mapToProductVariant(productDto.getVariants(), product));
         }
 
-        // ✅ Gán ảnh
         if (productDto.getProductResources() != null) {
             product.setResources(mapToProductResources(productDto.getProductResources(), product));
         }
@@ -113,8 +107,8 @@ public class ProductMapper {
                 .description(product.getDescription())
                 .slug(product.getSlug())
                 .thumbnail(getProductThumbnail(product.getResources()))
-                .categoryId(product.getCategoryType() != null ? product.getCategoryType().getId() : null)
-                .categoryName(product.getCategoryType() != null ? product.getCategoryType().getName() : null)
+                .categoryId(product.getCategory() != null ? product.getCategory().getId() : null)
+                .categoryName(product.getCategory() != null ? product.getCategory().getName() : null)
                 .categoryTypeId(product.getCategoryType() != null ? product.getCategoryType().getId() : null)
                 .categoryTypeName(product.getCategoryType() != null ? product.getCategoryType().getName() : null)
                 .variants(mapProductVariantListToDto(product.getProductVariants()))

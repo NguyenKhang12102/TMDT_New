@@ -1,28 +1,23 @@
-// src/pages/HomePage.jsx
-import React  from 'react';
+import React from 'react';
 import HeroSection from '../../components/HeroSection/HeroSection.jsx';
-import CategorySection from '../../components/CategorySection/CategorySection.jsx';
-import ProcessSteps from '../../components/ProcessSteps/ProcessSteps.jsx';
-import FeaturesSection from '../../components/FeaturesSection/FeaturesSection.jsx';
-import CustomerReview from '../../components/CustomerReview/CustomerReview.jsx';
+import BrandSection from '../../components/BrandSection/BrandSection.jsx';
+import InforBar from '../../components/InforBar/InforBar.jsx'
 
-
+import StoreList from '../../components/StoreList/StoreList.jsx'
+import CustomerReview from '../../components/CustomerReview/CustomerReview.jsx'
+import DiscountProduct from "../../components/DiscountProduct/DiscountProduct.jsx";
+// import { useDispatch, useSelector } from "react-redux";
 const HomePage = () => {
-
     return (
         <div>
             <HeroSection />
-            {/*<CategorySection*/}
-            {/*    categories={categories}*/}
-            {/*    productList={productList}*/}
-            {/*    selectedCateId={selectedCateId}*/}
-            {/*    setSelectedCateId={setSelectedCateId}*/}
-            {/*    loadingCate={loadingCate}*/}
-            {/*/>*/}
-            <CategorySection />
-            <ProcessSteps />
-            <FeaturesSection />
+            <BrandSection />
+            <DiscountProduct />
+
+            <StoreList />
+            <InforBar />
             <CustomerReview />
+
         </div>
     );
 };

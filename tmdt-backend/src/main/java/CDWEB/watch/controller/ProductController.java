@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import org.springframework.security.access.prepost.PreAuthorize;
 
 @RestController
 @RequestMapping("/api/products")
@@ -52,6 +53,7 @@ public class ProductController {
 
     //   create Product
     @PostMapping
+    @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<Product> createProduct(@Validated @RequestBody ProductDto productDto, BindingResult result) {
         if (result.hasErrors()) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -61,12 +63,14 @@ public class ProductController {
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<Product> updateProduct(@RequestBody ProductDto productDto,@PathVariable UUID id){
         Product product = productService.updateProduct(productDto,id);
         return new ResponseEntity<>(product,HttpStatus.OK);
     }
     // Xóa sản phẩm theo id
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<?> deleteProduct(@PathVariable UUID id) {
         try {
             productService.deleteProduct(id);
@@ -75,14 +79,6 @@ public class ProductController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Không tìm thấy sản phẩm để xóa");
         }
     }
-    @GetMapping("/by-category-type/{typeId}")
-    public ResponseEntity<List<ProductDto>> getByCategoryType(@PathVariable UUID typeId) {
-        List<ProductDto> productList = productService.getProductsByCategoryTypeId(typeId);
-        return ResponseEntity.ok(productList);
-    }
-
-
-
 
 
 }
