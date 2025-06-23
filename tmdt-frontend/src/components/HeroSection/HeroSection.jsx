@@ -1,52 +1,44 @@
-import React, { useState } from 'react';
-import Img1 from '../../assets/hero.jpg';
-import Img2 from '../../assets/banner2.jpg';
-import Img3 from '../../assets/banner3.jpg';
+import React from 'react';
 import './HeroSection.css';
 import { IoIosArrowBack, IoIosArrowForward } from 'react-icons/io';
 
 const HeroSection = () => {
-    const images = [ Img3,Img2, Img1];
-    const [currentIndex, setCurrentIndex] = useState(0);
-
-    const handlePrev = () => {
-        setCurrentIndex(prevIndex =>
-            prevIndex === 0 ? images.length - 1 : prevIndex - 1
-        );
-    };
-
-    const handleNext = () => {
-        setCurrentIndex(prevIndex =>
-            prevIndex === images.length - 1 ? 0 : prevIndex + 1
-        );
-    };
-
     return (
-        <div
-            className="hero-section"
-            style={{ backgroundImage: `url(${images[currentIndex]})` }}
-        >
-            <div className="overlay"></div>
+        <>
+            {/* Hero Section */}
+            <section className="bg-gradient-to-r from-gray-100 to-white py-12">
+                <div className="mx-16 grid md:grid-cols-2 gap-8 items-center px-4">
+                    <div className="space-y-6">
+                        <h1 className="text-3xl md:text-4xl font-bold">
+                            Thiết kế của bạn,
+                            <br />
+                            in ấn hoàn hảo!
+                        </h1>
+                        <p className="text-gray-600">6,000+ khách hàng hài lòng</p>
+                        <div className="flex gap-4">
+                            <button className="rounded-full px-6 py-2 bg-black text-white hover:bg-gray-800 transition">
+                                Thiết kế
+                            </button>
+                            <button className="rounded-full px-6 py-2 border border-black text-black hover:bg-gray-100 transition">
+                                Sản phẩm
+                            </button>
 
-            {/* Icon prev ở giữa bên trái */}
-            <button className="icon-center left" onClick={handlePrev} aria-label="Previous">
-                <IoIosArrowBack />
-            </button>
-
-            {/* Icon next ở giữa bên phải */}
-            <button className="icon-center right" onClick={handleNext} aria-label="Next">
-                <IoIosArrowForward />
-            </button>
-
-            <main className="hero-content">
-                <div className="hero-text">
-                    <h2>Bộ Sưu Tập Mới</h2>
+                        </div>
+                    </div>
+                    <div className="flex justify-center">
+                        <div className="relative bg-gray-100 rounded-lg p-6">
+                            <img
+                                src="https://img.staticdj.com/c6d8abbb4916a5bf0f9708adfdfc4e0c_2560x.jpg?height=300&width=400"
+                                alt="Ender-3 V3 KE 3D Printer"
+                                width={400}
+                                height={400}
+                                className="object-cover"
+                            />
+                        </div>
+                    </div>
                 </div>
-                <p className="hero-title">Đồng Hồ Cao Cấp</p>
-                <p className="hero-subtitle">Tinh tế / Chính xác / Đẳng cấp</p>
-                <button className="hero-button">Mua Ngay</button>
-            </main>
-        </div>
+            </section>
+        </>
     );
 };
 
