@@ -1,10 +1,12 @@
 import { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { setLoading } from '../../store/features/common.js';
-import { setAuthenticated } from "../../store/features/authSlice.jsx";
-import { addAddressAPI } from '../../api/UserInfo.js';
-import {saveAddress, selectUserInfo, selectIsUserAdmin} from '../../store/features/user.js';
+import { setLoading } from '../../store/features/common';
+import { setAuthenticated } from "../../store/features/authSlice";
+import { addAddressAPI, fetchUserDetails } from '../../api/UserInfo.js';
+import { loadUserInfo, saveAddress, selectUserInfo, selectIsUserAdmin } from '../../store/features/user.js';
+
 import { Link } from "react-router-dom";
+import { getToken } from "../../utils/jwt-helper.js";
 
 const ProfilePage = () => {
     const user = useSelector(selectUserInfo);
@@ -20,14 +22,19 @@ const ProfilePage = () => {
     });
 
     useEffect(() => {
-
-        dispatch(setLoading(true));
-        const timeout = setTimeout(() => {
-            dispatch(setLoading(false));
-            dispatch(setAuthenticated(true));
-        }, 300);
-
-        return () => clearTimeout(timeout);
+        const loadData = async () => {
+            dispatch(setLoading(true));
+            try {
+                const data = await fetchUserDetails();
+                dispatch(loadUserInfo(data));
+                dispatch(setAuthenticated(true));
+            } catch (err) {
+                console.error("Lỗi khi lấy thông tin người dùng:", err);
+            } finally {
+                dispatch(setLoading(false));
+            }
+        };
+        loadData();
     }, [dispatch]);
 
     const handleAddAddress = async () => {
@@ -49,14 +56,48 @@ const ProfilePage = () => {
         }
     };
 
+    const handleRedeem = async (requiredPoints) => {
+        try {
+            const token = getToken();
+
+            const res = await fetch(`http://localhost:8080/api/vouchers/redeem?points=${requiredPoints}`, {
+                method: "POST",
+                headers: {
+                    "Authorization": `Bearer ${token}`,
+                    "Content-Type": "application/json"
+                }
+            });
+
+            const text = await res.text();
+
+            if (res.ok) {
+                const data = JSON.parse(text);
+                alert(`Đổi thành công! Nhận được voucher ${data.discountPercentage}%`);
+                window.location.reload();
+            } else {
+                alert(text); // ví dụ: "Bạn không đủ điểm để đổi voucher này."
+            }
+        } catch (err) {
+            console.error("Lỗi khi gọi API đổi điểm:", err);
+            alert("Đã xảy ra lỗi khi gọi API đổi điểm.");
+        }
+    };
+
+
+
 
     const latestAddress = user?.addressList?.[user.addressList.length - 1] ?? null;
     const hasAvatar = Boolean(user?.avatarUrl);
 
     return (
-
         <div className="w-full max-w-4xl mx-auto mt-12 p-8 bg-gradient-to-br from-white to-blue-50 shadow-xl rounded-2xl font-sans min-h-[550px] mb-12">
-            {isUserAdmin && <div className="text-right"><Link to={"/admin/"} className="text-lg text-blue-900 underline">Manage Admin Dashboard</Link></div>}
+
+            {isUserAdmin && (
+                <div className="text-right">
+                    <Link to={"/admin"} className="text-lg text-blue-900 underline">Manage Admin</Link>
+                </div>
+            )}
+
             <div className="flex flex-col lg:flex-row gap-8">
                 {hasAvatar && (
                     <div className="flex justify-center lg:justify-start">
@@ -72,7 +113,7 @@ const ProfilePage = () => {
                         Thông Tin Cá Nhân
                     </h2>
 
-                    {user && user.email ?    (
+                    {user && user.email ? (
                         <div className="flex flex-col gap-8 text-gray-800 text-base">
                             <div className="flex justify-between border-b pb-3">
                                 <span className="font-semibold w-1/3">Họ tên:</span>
@@ -140,16 +181,38 @@ const ProfilePage = () => {
                                 ) : latestAddress ? (
                                     <ul className="list-disc ml-5 text-gray-700">
                                         <li className="flex justify-between items-start gap-4 mb-2">
-                                            <div>
-                                                <div> {latestAddress.street}, {latestAddress.city}, {latestAddress.state}</div>
-                                            </div>
-
+                                            <div>{latestAddress.street}, {latestAddress.city}, {latestAddress.state}</div>
                                         </li>
                                     </ul>
                                 ) : (
                                     <span className="text-gray-500">Chưa có địa chỉ nào</span>
                                 )}
                             </div>
+
+                            <div className="flex justify-between border-b pb-3">
+                                <span className="font-semibold w-1/3">Điểm thưởng:</span>
+                                <span className="text-right flex-1 text-blue-600 font-bold">{user?.points ?? 0} điểm</span>
+                            </div>
+
+                            {user?.points >= 500 && (
+                                <div className="mt-6">
+                                    <p className="text-sm text-gray-600 mb-2">Bạn có thể đổi điểm để nhận voucher:</p>
+                                    <button
+                                        onClick={() => handleRedeem(500)}
+                                        className="bg-green-500 text-white py-2 px-4 rounded mr-3 hover:bg-green-600"
+                                        disabled={user.points < 500}
+                                    >
+                                        Đổi 500 điểm lấy voucher 10%
+                                    </button>
+                                    <button
+                                        onClick={() => handleRedeem(1000)}
+                                        className="bg-purple-500 text-white py-2 px-4 rounded hover:bg-purple-600"
+                                        disabled={user.points < 1000}
+                                    >
+                                        Đổi 1000 điểm lấy voucher 20%
+                                    </button>
+                                </div>
+                            )}
                         </div>
                     ) : (
                         <p className="text-center text-gray-500 mt-6">Đang tải thông tin người dùng...</p>

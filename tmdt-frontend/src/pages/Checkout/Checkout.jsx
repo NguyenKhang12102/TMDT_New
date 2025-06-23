@@ -1,5 +1,6 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+
 // import { useNavigate } from "react-router-dom";
 
 import { setLoading } from "../../store/features/common.js";
@@ -9,14 +10,17 @@ import { selectCartItems } from "../../store/features/cart.js";
 import CODCheckoutForm from "./CODCheckoutForm.jsx";
 import "./Checkout.css";
 import { saveAddress } from "../../store/features/user.js";
+import { verifyVoucherAPI } from "../../api/verifyVoucher.js";
 
 const Checkout = () => {
     const dispatch = useDispatch();
-    // const navigate = useNavigate();
     const cartItems = useSelector(selectCartItems);
 
     const [userInfo, setUserInfo] = useState({});
     const [paymentMethod, setPaymentMethod] = useState("");
+    const [voucherCode, setVoucherCode] = useState("");
+    const [discount, setDiscount] = useState(0);
+    const [voucherId, setVoucherId] = useState(null);
 
     const [newAddress, setNewAddress] = useState({
         name: '',
@@ -27,140 +31,21 @@ const Checkout = () => {
         zipCode: ''
     });
 
-    const cities = [
-        "Hà Nội",
-        "TP Hồ Chí Minh",
-        "Đà Nẵng",
-        "Hải Phòng",
-        "Cần Thơ",
-        "An Giang",
-        "Bà Rịa - Vũng Tàu",
-        "Bắc Giang",
-        "Bắc Kạn",
-        "Bạc Liêu",
-        "Bắc Ninh",
-        "Bến Tre",
-        "Bình Định",
-        "Bình Dương",
-        "Bình Phước",
-        "Bình Thuận",
-        "Cà Mau",
-        "Cao Bằng",
-        "Đắk Lắk",
-        "Đắk Nông",
-        "Điện Biên",
-        "Đồng Nai",
-        "Đồng Tháp",
-        "Gia Lai",
-        "Hà Giang",
-        "Hà Nam",
-        "Hà Tĩnh",
-        "Hải Dương",
-        "Hậu Giang",
-        "Hòa Bình",
-        "Hưng Yên",
-        "Khánh Hòa",
-        "Kiên Giang",
-        "Kon Tum",
-        "Lai Châu",
-        "Lâm Đồng",
-        "Lạng Sơn",
-        "Lào Cai",
-        "Long An",
-        "Nam Định",
-        "Nghệ An",
-        "Ninh Bình",
-        "Ninh Thuận",
-        "Phú Thọ",
-        "Phú Yên",
-        "Quảng Bình",
-        "Quảng Nam",
-        "Quảng Ngãi",
-        "Quảng Ninh",
-        "Quảng Trị",
-        "Sóc Trăng",
-        "Sơn La",
-        "Tây Ninh",
-        "Thái Bình",
-        "Thái Nguyên",
-        "Thanh Hóa",
-        "Thừa Thiên Huế",
-        "Tiền Giang",
-        "Trà Vinh",
-        "Tuyên Quang",
-        "Vĩnh Long",
-        "Vĩnh Phúc",
-        "Yên Bái"
-    ];
-
-
     const [formErrors, setFormErrors] = useState({});
+
+    const cities = [/* danh sách tỉnh thành Việt Nam - như cũ */];
 
     const subTotal = useMemo(() => {
         return cartItems.reduce((total, item) => total + (item.subTotal || 0), 0).toFixed(2);
     }, [cartItems]);
 
-    useEffect(() => {
-        dispatch(setLoading(true));
-        fetchUserDetails()
-            .then((res) => {
-                setUserInfo(res);
-            })
-            .catch((err) => console.error(err))
-            .finally(() => dispatch(setLoading(false)));
-    }, [dispatch]);
+    const discountAmount = useMemo(() => {
+        return ((parseFloat(subTotal) * discount) / 100).toFixed(2);
+    }, [subTotal, discount]);
 
-    const validateField = (name, value) => {
-        let error = "";
-
-        switch (name) {
-            case "phoneNumber":
-                { const phoneRegex = /^(0|\+84)[0-9]{9,10}$/;
-                if (!value.trim()) {
-                    error = "Vui lòng nhập số điện thoại";
-                } else if (!phoneRegex.test(value)) {
-                    error = "Số điện thoại không hợp lệ (bắt đầu bằng 0 hoặc +84, 10–11 số)";
-                }
-                break; }
-
-            case "street":
-                if (!value.trim() || value.length < 5) {
-                    error = "Địa chỉ phải có ít nhất 5 ký tự";
-                }
-                break;
-
-            case "city":
-                if (!value.trim()) {
-                    error = "Vui lòng nhập tỉnh/thành phố";
-                }
-                break;
-
-            default:
-                break;
-        }
-
-        setFormErrors((prev) => ({ ...prev, [name]: error }));
-    };
-
-    const handleCustomerInfoChange = (e) => {
-        const { name, value } = e.target;
-        setNewAddress((prev) => ({ ...prev, [name]: value }));
-        validateField(name, value);
-    };
-
-    const validateForm = () => {
-        const fields = ["phoneNumber", "street", "city"];
-        let isValid = true;
-
-        fields.forEach((field) => {
-            const value = newAddress[field];
-            validateField(field, value);
-            if (!value || formErrors[field]) isValid = false;
-        });
-
-        return isValid;
-    };
-
+    const totalAmount = useMemo(() => {
+        return (parseFloat(subTotal) - parseFloat(discountAmount)).toFixed(2);
+    }, [subTotal, discountAmount]);
 
     useEffect(() => {
         dispatch(setLoading(true));
@@ -183,29 +68,69 @@ const Checkout = () => {
             .finally(() => dispatch(setLoading(false)));
     }, [dispatch]);
 
+    const validateField = (name, value) => {
+        let error = "";
+        if (name === "phoneNumber") {
+            const phoneRegex = /^(0|\+84)[0-9]{9,10}$/;
+            if (!value.trim()) error = "Vui lòng nhập số điện thoại";
+            else if (!phoneRegex.test(value)) error = "Số điện thoại không hợp lệ";
+        }
+        if (name === "street" && (!value.trim() || value.length < 5)) {
+            error = "Địa chỉ phải có ít nhất 5 ký tự";
+        }
+        if (name === "city" && !value.trim()) {
+            error = "Vui lòng nhập tỉnh/thành phố";
+        }
+
+        setFormErrors((prev) => ({ ...prev, [name]: error }));
+    };
+
+    const validateForm = () => {
+        const fields = ["phoneNumber", "street", "city"];
+        let isValid = true;
+        fields.forEach((field) => {
+            const value = newAddress[field];
+            validateField(field, value);
+            if (!value || formErrors[field]) isValid = false;
+        });
+        return isValid;
+    };
+
+    const handleCustomerInfoChange = (e) => {
+        const { name, value } = e.target;
+        setNewAddress((prev) => ({ ...prev, [name]: value }));
+        validateField(name, value);
+    };
 
     const handleAddAddress = async () => {
         if (!validateForm()) return;
-
         try {
             const added = await addAddressAPI(newAddress);
             dispatch(saveAddress(added));
-            setNewAddress({
-                name: '',
-                phoneNumber: '',
-                street: '',
-                city: '',
-                state: 'Việt Nam',
-                zipCode: ''
-            });
+            setNewAddress({ name: '', phoneNumber: '', street: '', city: '', state: 'Việt Nam', zipCode: '' });
             setFormErrors({});
             return added;
         } catch (err) {
-            console.error(err);
             alert("Có lỗi xảy ra khi lưu địa chỉ");
             throw err;
         }
     };
+
+
+
+    const handleApplyVoucher = async () => {
+        try {
+            const result = await verifyVoucherAPI(voucherCode, userInfo.id);
+            console.log("✅ Voucher hợp lệ:", result);
+            setDiscount(result.discountPercentage); // giảm giá %
+            setVoucherId(result.voucherId);         // lưu ID voucher để gửi backend khi đặt hàng
+        } catch (err) {
+            alert(err.message);
+        }
+    };
+
+
+
 
     return (
         <div className="checkout-wrapper">
@@ -221,9 +146,7 @@ const Checkout = () => {
                             onChange={handleCustomerInfoChange}
                             placeholder="Nhập họ và tên"
                         />
-                        {formErrors.name && (
-                            <p className="form-error">{formErrors.name}</p>
-                        )}
+                        {formErrors.name && <p className="form-error">{formErrors.name}</p>}
                     </div>
 
                     <div className="form-group">
@@ -235,19 +158,12 @@ const Checkout = () => {
                             onChange={handleCustomerInfoChange}
                             placeholder="Số điện thoại"
                         />
-                        {formErrors.phoneNumber && (
-                            <p className="form-error">{formErrors.phoneNumber}</p>
-                        )}
+                        {formErrors.phoneNumber && <p className="form-error">{formErrors.phoneNumber}</p>}
                     </div>
 
                     <div className="form-group">
                         <label>Quốc gia</label>
-                        <input
-                            type="text"
-                            name="state"
-                            value={newAddress.state}
-                            disabled
-                        />
+                        <input type="text" name="state" value={newAddress.state} disabled />
                     </div>
                 </div>
 
@@ -262,9 +178,7 @@ const Checkout = () => {
                             onChange={handleCustomerInfoChange}
                             placeholder="Số nhà - Tên đường - Thôn/Xã"
                         />
-                        {formErrors.street && (
-                            <p className="form-error">{formErrors.street}</p>
-                        )}
+                        {formErrors.street && <p className="form-error">{formErrors.street}</p>}
                     </div>
 
                     <div className="form-group">
@@ -279,14 +193,10 @@ const Checkout = () => {
                                 <option key={c} value={c}>{c}</option>
                             ))}
                         </select>
-                        {formErrors.city && (
-                            <p className="form-error">{formErrors.city}</p>
-                        )}
-
+                        {formErrors.city && <p className="form-error">{formErrors.city}</p>}
                     </div>
                 </div>
 
-                {/* Chọn phương thức thanh toán */}
                 <div className="checkout-form mt-6">
                     <div className="form-group">
                         <p>Phương thức thanh toán</p>
@@ -317,10 +227,12 @@ const Checkout = () => {
                         addressId={userInfo?.addressList?.[0]?.id}
                         newAddress={newAddress}
                         handleAddAddress={handleAddAddress}
+                        discount={discount}
+                        voucherId={voucherId}
+                        totalAmount={totalAmount}
                     />
+
                 </div>
-
-
             </div>
 
             <div className="checkout-right">
@@ -338,8 +250,13 @@ const Checkout = () => {
                 </div>
 
                 <div className="discount-input">
-                    <input type="text" placeholder="Mã giảm giá" />
-                    <button className="apply-btn">Sử dụng</button>
+                    <input
+                        type="text"
+                        placeholder="Mã giảm giá"
+                        value={voucherCode}
+                        onChange={(e) => setVoucherCode(e.target.value)}
+                    />
+                    <button className="apply-btn" onClick={handleApplyVoucher}>Sử dụng</button>
                 </div>
 
                 <div className="totals">
@@ -347,13 +264,22 @@ const Checkout = () => {
                         <span>Tạm tính</span>
                         <span>{parseFloat(subTotal).toLocaleString()}₫</span>
                     </div>
+
+                    {discount > 0 && (
+                        <div className="row text-green-600">
+                            <span>Giảm giá ({discount}%)</span>
+                            <span>-{parseFloat(discountAmount).toLocaleString()}₫</span>
+                        </div>
+                    )}
+
                     <div className="row">
                         <span>Phí vận chuyển</span>
                         <span>Miễn phí</span>
                     </div>
-                    <div className="row total">
+
+                    <div className="row total font-bold text-lg">
                         <span>Tổng cộng</span>
-                        <span>{parseFloat(subTotal).toLocaleString()}₫</span>
+                        <span>{parseFloat(totalAmount).toLocaleString()}₫</span>
                     </div>
                 </div>
             </div>

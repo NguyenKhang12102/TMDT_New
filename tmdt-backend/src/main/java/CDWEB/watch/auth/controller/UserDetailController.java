@@ -41,6 +41,7 @@ public class UserDetailController {
                 .email(user.getEmail())
                 .id(user.getId())
                 .phoneNumber(user.getPhoneNumber())
+                .points(user.getPoint())
                 .addressList(user.getAddressList())
                 .authorityList(user.getAuthorities().toArray()).build();
 

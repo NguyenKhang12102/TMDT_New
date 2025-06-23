@@ -1,77 +1,62 @@
 import axios from "axios";
 import { API_BASE_URL, getHeaders } from "./constant";
 
-export const fetchUserDetails = async ()=>{
+// Get user profile
+export const fetchUserDetails = async () => {
     const url = API_BASE_URL + '/api/user/profile';
-    try{
-        const response = await axios(url,{
-            method:"GET",
-            headers:getHeaders()
-        });
+    try {
+        const response = await axios.get(url, { headers: getHeaders() });
         return response?.data;
+    } catch (err) {
+        console.error("Lỗi khi lấy thông tin người dùng:", err);
+        throw new Error(err?.response?.data?.message || "Lỗi khi lấy thông tin người dùng.");
     }
-    catch(err){
-        throw new Error(err);
-    }
-}
+};
 
-export const addAddressAPI = async (data)=>{
+// Add new address
+export const addAddressAPI = async (data) => {
     const url = API_BASE_URL + '/api/address';
-    console.log("data :",data);
-    try{
-        const response = await axios(url,{
-            method:"POST",
-            data:data,
-            headers:getHeaders()
-        });
+    try {
+        const response = await axios.post(url, data, { headers: getHeaders() });
         return response?.data;
+    } catch (err) {
+        console.error("Lỗi khi thêm địa chỉ:", err);
+        throw new Error(err?.response?.data?.message || "Lỗi khi thêm địa chỉ.");
     }
-    catch(err){
-        throw new Error(err);
-    }
-}
+};
 
-export const deleteAddressAPI = async (id)=>{
+// Delete address
+export const deleteAddressAPI = async (id) => {
     const url = API_BASE_URL + `/api/address/${id}`;
-
-    try{
-        const response = await axios(url,{
-            method:"DELETE",
-            headers:getHeaders()
-        });
-
-        console.log(response?.data);
+    try {
+        const response = await axios.delete(url, { headers: getHeaders() });
         return response?.data;
+    } catch (err) {
+        console.error("Lỗi khi xóa địa chỉ:", err);
+        throw new Error(err?.response?.data?.message || "Lỗi khi xóa địa chỉ.");
     }
-    catch(err){
-        throw new Error(err);
-    }
-}
+};
 
-export const fetchOrderAPI = async ()=>{
+// Fetch all orders of user
+export const fetchOrderAPI = async () => {
     const url = API_BASE_URL + `/api/order/user`;
-    try{
-        const response = await axios(url,{
-            method:"GET",
-            headers:getHeaders()
-        });
+    try {
+        const response = await axios.get(url, { headers: getHeaders() });
         return response?.data;
+    } catch (err) {
+        console.error("Lỗi khi lấy đơn hàng:", err);
+        throw new Error(err?.response?.data?.message || "Lỗi khi lấy đơn hàng.");
     }
-    catch(err){
-        throw new Error(err);
-    }
-}
+};
 
-export const cancelOrderAPI = async (id)=>{
+// Cancel order
+export const cancelOrderAPI = async (id) => {
     const url = API_BASE_URL + `/api/order/cancel/${id}`;
-    try{
-        const response = await axios(url,{
-            method:"POST",
-            headers:getHeaders()
-        });
+    try {
+        const response = await axios.post(url, {}, { headers: getHeaders() });
         return response?.data;
+    } catch (err) {
+        console.error("Lỗi khi hủy đơn hàng:", err);
+        throw new Error(err?.response?.data?.message || "Lỗi khi hủy đơn hàng.");
     }
-    catch(err){
-        throw new Error(err);
-    }
-}
+};
