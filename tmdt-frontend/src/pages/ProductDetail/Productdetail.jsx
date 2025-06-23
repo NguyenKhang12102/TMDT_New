@@ -8,14 +8,24 @@ import CustomerReviewDetail from "../../components/CustomerReviewDetail/Customer
 import { setShowCart } from "../../store/features/uiSlice.jsx";
 
 const ProductDetail = () => {
-    const { product } = useLoaderData();
+    const loaderData = useLoaderData();
+    const product = loaderData?.product;
+
     const dispatch = useDispatch();
     const categories = useSelector((state) => state?.categoryState?.categories);
-    // const navigate = useNavigate();
     const [image, setImage] = useState(product?.thumbnail || '');
     const [breadCrumbLinks, setBreadCrumbLinks] = useState([]);
     const [similarProducts, setSimilarProducts] = useState([]);
     const [error, setError] = useState('');
+
+    // Nếu không có product thì show fallback
+    if (!product) {
+        return (
+            <div className="text-center text-gray-600 py-12 text-lg">
+                Không tìm thấy sản phẩm hoặc có lỗi xảy ra.
+            </div>
+        );
+    }
 
     const productCategory = useMemo(() => {
         return categories?.find((c) => c.id === product.categoryId);
@@ -30,13 +40,15 @@ const ProductDetail = () => {
     }, [productCategory, product]);
 
     useEffect(() => {
-        getProductByTypeId(product?.categoryId, product?.categoryTypeId)
-            .then((res) => {
-                const filtered = res?.filter((item) => item?.id !== product?.id);
-                setSimilarProducts(filtered);
-            })
-            .catch(() => {});
-    }, [product?.categoryId, product?.categoryTypeId, product?.id]);
+        if (product?.categoryId && product?.categoryTypeId) {
+            getProductByTypeId(product.categoryId, product.categoryTypeId)
+                .then((res) => {
+                    const filtered = res?.filter((item) => item?.id !== product?.id);
+                    setSimilarProducts(filtered || []);
+                })
+                .catch(() => {});
+        }
+    }, [product]);
 
     const addItemToCart = useCallback(() => {
         if (product?.stockQuantity <= 0) {
@@ -45,16 +57,15 @@ const ProductDetail = () => {
         }
 
         dispatch(addItemToCartAction({
-            productId: product?.id,
-            thumbnail: product?.thumbnail,
-            name: product?.name,
+            productId: product.id,
+            thumbnail: product.thumbnail,
+            name: product.name,
             variant: null,
             quantity: 1,
-            subTotal: product?.price,
-            price: product?.price,
+            subTotal: product.price,
+            price: product.price,
         }));
         dispatch(setShowCart(true));
-
     }, [dispatch, product]);
 
     return (
@@ -140,19 +151,18 @@ const ProductDetail = () => {
                         disabled={product?.stockQuantity <= 0}
                         onClick={addItemToCart}
                         className={`relative group w-fit px-6 py-3 rounded-full font-semibold text-white transition-all duration-300 ease-in-out transform shadow-lg overflow-hidden
-    ${product?.stockQuantity <= 0
+                            ${product?.stockQuantity <= 0
                             ? 'bg-gray-400 cursor-not-allowed'
                             : 'bg-gradient-to-r from-red-500 to-pink-500 hover:scale-105 hover:shadow-xl'}
-  `}
+                        `}
                     >
-  <span className="relative z-10 flex items-center gap-2">
-    🛒 Thêm vào giỏ hàng
-  </span>
+                        <span className="relative z-10 flex items-center gap-2">
+                            🛒 Thêm vào giỏ hàng
+                        </span>
                         <span
                             className="absolute left-0 top-0 h-full w-0 bg-white opacity-10 transition-all duration-500 group-hover:w-full"
                         ></span>
                     </button>
-
 
                     {error && <p className="text-sm text-red-500 mt-2">{error}</p>}
                 </div>

@@ -44,6 +44,7 @@ public class WebSecurityConfig {
                         .requestMatchers("/v3/api-docs/**", "/swagger-ui/**").permitAll()
                         .requestMatchers(HttpMethod.GET,
                                 "/api/products",
+                                "/api/products/**", // <-- Thêm dòng này
                                 "/api/products/best-selling",
                                 "/api/products/newest",
                                 "/api/products/most-viewed",

@@ -1,9 +1,9 @@
 // src/components/ProductSection/ProductSection.jsx
 import React from 'react';
 import { Swiper, SwiperSlide } from 'swiper/react';
+import { Navigation, Autoplay } from 'swiper/modules';
 import 'swiper/css';
 import 'swiper/css/navigation';
-import { Navigation } from 'swiper/modules';
 import ProductCard from '../ProductCard/ProductCard';
 
 const ProductSection = ({ title, products = [] }) => {
@@ -12,10 +12,15 @@ const ProductSection = ({ title, products = [] }) => {
             <h2 className="text-2xl font-bold mb-4">{title}</h2>
 
             <Swiper
-                modules={[Navigation]}
+                modules={[Navigation, Autoplay]}
                 spaceBetween={20}
-                slidesPerView={4} // Số sản phẩm hiển thị trong 1 hàng
+                slidesPerView={4}
                 navigation
+                loop={true}
+                autoplay={{
+                    delay: 3000,
+                    disableOnInteraction: false,
+                }}
                 breakpoints={{
                     640: { slidesPerView: 1 },
                     768: { slidesPerView: 2 },

@@ -80,9 +80,9 @@ public class ProductServiceImpl implements ProductService {
         Product product = productRepository.findBySlug(slug)
                 .orElseThrow(() -> new ResourceNotFoundEx("Product Not Found!"));
 
-        // ✅ Tăng viewCount mỗi lần người dùng xem chi tiết sản phẩm
-        product.setViewCount(product.getViewCount() + 1);
-        productRepository.save(product); // Lưu lại viewCount mới
+        Long viewCount = product.getViewCount() == null ? 0L : product.getViewCount();
+        product.setViewCount(viewCount + 1);
+        productRepository.save(product);
 
         ProductDto productDto = productMapper.mapProductToDto(product);
         productDto.setCategoryId(product.getCategoryType().getId());
@@ -91,6 +91,7 @@ public class ProductServiceImpl implements ProductService {
         productDto.setProductResources(productMapper.mapProductResourcesListDto(product.getResources()));
         return productDto;
     }
+
 
 
     @Override
