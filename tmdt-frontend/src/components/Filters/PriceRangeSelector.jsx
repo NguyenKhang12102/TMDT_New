@@ -2,10 +2,10 @@ import React from "react";
 
 const PriceRangeSelector = ({ currentMin, currentMax, onChange }) => {
     const presetRanges = [
-        { label: "< 5 triệu", min: 0, max: 5000000 },
-        { label: "5 - 10 triệu", min: 5000000, max: 10000000 },
-        { label: "10 - 20 triệu", min: 10000000, max: 20000000 },
-        { label: "> 20 triệu", min: 20000000, max: 30000000 },
+        { label: "< 100.000 vnđ", min: 0, max: 100000 },
+        { label: "< 100.000 vnđ - 500.000 vnd", min: 100000, max: 500000 },
+        { label: "500.000 vnđ -  2.000.000 vnđ", min: 500000, max: 2000000 },
+        { label: "> 2.000.000 vnđ", min: 20000000, max: 50000000 },
     ];
 
     const isActive = (preset) =>

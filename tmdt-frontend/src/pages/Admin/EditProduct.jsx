@@ -1,39 +1,60 @@
-import React from 'react'
-import { ArrayInput, BooleanInput, Edit, NumberInput, required, SelectInput, SimpleForm, SimpleFormIterator, TextInput } from 'react-admin'
-import { colorSelector } from '../../components/Filters/ColorsFilter'
-import { sizeSelector } from './CreateProduct'
-import ImageOrUrlInput from './compoment/ImageOrUrlInput.jsx'
+import React from 'react';
+import {
+    ArrayInput,
+    BooleanInput,
+    Edit,
+    NumberInput,
+    required,
+    SelectInput,
+    SimpleForm,
+    SimpleFormIterator,
+    TextInput,
+    useGetList
+} from 'react-admin';
+
 const EditProduct = () => {
+    const { data: categoryTypes, isLoading: loadingTypes } = useGetList('category-types');
+    const { data: categories, isLoading: loadingCategories } = useGetList('categories');
+
     return (
         <Edit>
             <SimpleForm>
-                <TextInput label="Name" source='name' />
-                <TextInput label="Description" source='description' />
-                <TextInput label="Price" source='price' type='number' />
-                <TextInput label="Brand" source='brand' />
+                <TextInput label="Name" source="name" validate={[required()]} />
+                <TextInput label="Description" source="description" />
+                <NumberInput label="Price" source="price" validate={[required()]} />
+                <TextInput label="Brand" source="brand" validate={[required()]} />
+                <TextInput source="thumbnail" label="Thumbnail (link ảnh)" validate={[required()]} />
 
-                {/* Thay thế cho ImageField + ImageInput */}
-                <ImageOrUrlInput source="thumbnail" label="Thumbnail (file hoặc link)" />
+                <SelectInput
+                    label="Category"
+                    source="categoryId"
+                    choices={categories || []}
+                    optionText="name"
+                    optionValue="id"
+                    validate={[required()]}
+                    isLoading={loadingCategories}
+                />
+                <SelectInput
+                    label="Category Type"
+                    source="categoryTypeId"
+                    choices={categoryTypes || []}
+                    optionText="name"
+                    optionValue="id"
+                    validate={[required()]}
+                    isLoading={loadingTypes}
+                />
 
-                {/*<ArrayInput source='variants' label={'Edit Variants'}>*/}
-                {/*    <SimpleFormIterator inline>*/}
-                {/*        <SelectInput source='color' choices={Object.keys(colorSelector)} resettable />*/}
-                {/*        <SelectInput source='size' choices={sizeSelector} />*/}
-                {/*        <NumberInput source='stockQuantity' />*/}
-                {/*    </SimpleFormIterator>*/}
-                {/*</ArrayInput>*/}
-
-                <ArrayInput source='productResources'>
+                <ArrayInput source="productResources">
                     <SimpleFormIterator inline>
-                        <TextInput source='name' validate={[required()]} />
-                        {/* Thay cho ImageField + ImageInput */}
-                        <ImageOrUrlInput source='url' label="Ảnh (file hoặc link)" />
-                        <SelectInput source='type' choices={["image"]} />
-                        <BooleanInput source='isPrimary' />
+                        <TextInput source="name" validate={[required()]} />
+                        <TextInput source="url" label="Ảnh (link)" validate={[required()]} />
+                        <SelectInput source="type" choices={[{ id: 'image', name: 'image' }]} />
+                        <BooleanInput source="isPrimary" />
                     </SimpleFormIterator>
                 </ArrayInput>
             </SimpleForm>
         </Edit>
-    )
-}
-export default EditProduct
+    );
+};
+
+export default EditProduct;

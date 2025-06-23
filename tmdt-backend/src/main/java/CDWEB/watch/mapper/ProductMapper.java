@@ -19,11 +19,13 @@ public class ProductMapper {
     @Autowired
     private CategoryService categoryService;
 
-    public Product mapToProductEntity(ProductDto productDto){
+    public Product mapToProductEntity(ProductDto productDto) {
         Product product = new Product();
-        if(null != productDto.getId()){
+
+        if (productDto.getId() != null) {
             product.setId(productDto.getId());
         }
+
         product.setName(productDto.getName());
         product.setDescription(productDto.getDescription());
         product.setBrand(productDto.getBrand());
@@ -37,7 +39,6 @@ public class ProductMapper {
 
             if (category != null) {
                 product.setCategory(category);
-
                 if (productDto.getCategoryTypeId() != null) {
                     CategoryType categoryType = category.getCategoryTypes().stream()
                             .filter(ct -> ct.getId().equals(productDto.getCategoryTypeId()))
@@ -48,7 +49,6 @@ public class ProductMapper {
                 }
             }
         }
-
         if (productDto.getVariants() != null) {
             product.setProductVariants(mapToProductVariant(productDto.getVariants(), product));
         }
@@ -59,6 +59,7 @@ public class ProductMapper {
 
         return product;
     }
+
 
     private List<Resources> mapToProductResources(List<ProductResourceDto> productResources, Product product) {
 

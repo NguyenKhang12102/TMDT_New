@@ -161,6 +161,29 @@ const Checkout = () => {
         return isValid;
     };
 
+
+    useEffect(() => {
+        dispatch(setLoading(true));
+        fetchUserDetails()
+            .then((res) => {
+                setUserInfo(res);
+                const defaultAddress = res.addressList?.[0];
+                if (defaultAddress) {
+                    setNewAddress({
+                        name: defaultAddress.name || '',
+                        phoneNumber: defaultAddress.phoneNumber || '',
+                        street: defaultAddress.street || '',
+                        city: defaultAddress.city || '',
+                        state: defaultAddress.state || 'Việt Nam',
+                        zipCode: defaultAddress.zipCode || ''
+                    });
+                }
+            })
+            .catch((err) => console.error(err))
+            .finally(() => dispatch(setLoading(false)));
+    }, [dispatch]);
+
+
     const handleAddAddress = async () => {
         if (!validateForm()) return;
 
@@ -189,6 +212,19 @@ const Checkout = () => {
             <div className="checkout-left">
                 <h2>Thông tin khách hàng</h2>
                 <div className="customer-info-form">
+                    <div className="form-group">
+                        <label>Họ và tên *</label>
+                        <input
+                            type="text"
+                            name="name"
+                            value={newAddress.name}
+                            onChange={handleCustomerInfoChange}
+                            placeholder="Nhập họ và tên"
+                        />
+                        {formErrors.name && (
+                            <p className="form-error">{formErrors.name}</p>
+                        )}
+                    </div>
 
                     <div className="form-group">
                         <label>Số điện thoại *</label>
@@ -230,6 +266,7 @@ const Checkout = () => {
                             <p className="form-error">{formErrors.street}</p>
                         )}
                     </div>
+
                     <div className="form-group">
                         <label>Tỉnh/Thành phố *</label>
                         <select

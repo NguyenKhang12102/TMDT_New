@@ -25,7 +25,7 @@ export const createOrderRequest = (cartItems, userId, addressId) => {
         totalAmount: parseFloat(totalAmount.toFixed(2)),
         discount: 0,
         paymentMethod: "CARD",
-        expectedDeliveryDate: "2024-10-05T21:11:46.202Z",
+        expectedDeliveryDate: new Date(new Date().setDate(new Date().getDate() + 3)).toISOString(),
         currency: "đ"
     };
 };

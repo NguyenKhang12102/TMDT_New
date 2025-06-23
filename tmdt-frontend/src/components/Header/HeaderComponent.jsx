@@ -103,6 +103,7 @@ const HeaderComponent = () => {
                             chủ</NavLink>
                         <NavLink to="/products" className="text-gray-500 hover:text-black">Sản phẩm</NavLink>
                         <NavLink to="/custom" className="text-gray-500 hover:text-black">Custom</NavLink>
+
                         {categories?.map((cat, idx) => (
                             <NavLink
                                 key={cat.code + idx}
@@ -111,8 +112,9 @@ const HeaderComponent = () => {
                                 {cat.name}
                             </NavLink>
                         ))}
+
                         <NavLink to="/aboutus" className="text-gray-500 hover:text-black">Giới thiệu</NavLink>
-                        <NavLink to="/services" className="text-gray-500 hover:text-black">Dịch vụ</NavLink>
+
                         <NavLink to="/contact" className="text-gray-500 hover:text-black">Liên hệ</NavLink>
                     </nav>
 
