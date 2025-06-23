@@ -18,7 +18,7 @@ public class EmailService {
 
     public String sendMail(User user) {
         String subject = "Xác nhận địa chỉ email";
-        String senderName = "TripleD";
+        String senderName = "Watch Store";
 
         String mailContent = "Xin chào " + user.getUsername() + ",\n\n";
         mailContent += "Cảm ơn bạn đã đăng ký tài khoản tại " + senderName + ".\n";

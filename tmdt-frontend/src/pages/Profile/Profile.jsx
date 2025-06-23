@@ -84,8 +84,6 @@ const ProfilePage = () => {
     };
 
 
-
-
     const latestAddress = user?.addressList?.[user.addressList.length - 1] ?? null;
     const hasAvatar = Boolean(user?.avatarUrl);
 

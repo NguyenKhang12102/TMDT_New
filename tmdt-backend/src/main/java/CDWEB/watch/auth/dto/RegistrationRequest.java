@@ -1,13 +1,14 @@
 package CDWEB.watch.auth.dto;
 
 
-import jakarta.validation.constraints.*;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.time.LocalDate;
 
 @Data
 @Builder
@@ -37,8 +38,4 @@ public class RegistrationRequest {
     @NotBlank(message = "Số điện thoại không được để trống")
     @Pattern(regexp = "^0\\d{9}$", message = "Số điện thoại không hợp lệ")
     private String phoneNumber;
-
-    @NotNull(message = "Ngày sinh không được để trống")
-    @Past(message = "Ngày sinh phải nằm trong quá khứ")
-    private LocalDate dateOfBirth;
 }

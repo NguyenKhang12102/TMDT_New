@@ -59,6 +59,9 @@ public class Order {
 
     private Double discount;
 
+    @Column(name = "discount_amount")
+    private Double discountAmount;
+
     @OneToOne(fetch = FetchType.LAZY, mappedBy = "order", cascade = CascadeType.ALL)
     @ToString.Exclude
     private Payment payment;

@@ -45,17 +45,15 @@ public class WebSecurityConfig {
         http
                 .cors(cors -> {})
                 .csrf(AbstractHttpConfigurer::disable)
-
                 .authorizeHttpRequests(auth -> auth
+                        // Cho phép truy cập tài liệu API swagger
                         .requestMatchers("/v3/api-docs/**", "/swagger-ui/**").permitAll()
-                        .requestMatchers("/api/auth/**").permitAll()
 
                         .requestMatchers(HttpMethod.GET, "/api/products", "/api/category", "/api/order","api/category-types","/api/products/by-category-type/**").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/products/**", "/api/category/**").permitAll()
                         .requestMatchers(HttpMethod.PUT, "/api/products/**", "/api/category/**").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/api/order/update-status/**", "/api/order/cancel/**").permitAll()
                         .requestMatchers("/api/order/**").permitAll()
-
-                        .requestMatchers("/api/user/**").authenticated() // ✅ THÊM DÒNG NÀY
 
                         .anyRequest().authenticated()
                 )

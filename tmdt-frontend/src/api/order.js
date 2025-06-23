@@ -45,3 +45,18 @@ export const confirmPaymentAPI = async (data)=>{
         throw new Error(err);
     }
 }
+
+export const updateOrderStatusAPI = async (orderId, status) => {
+    const url = API_BASE_URL + `/api/order/update-status/${orderId}`;
+    try {
+        const response = await axios(url, {
+            method: "POST",
+            data: { status: status },
+            headers: getHeaders(),
+        });
+        return response?.data;
+    } catch (err) {
+        console.error("Error updating order status:", err);
+        throw new Error(err);
+    }
+};
