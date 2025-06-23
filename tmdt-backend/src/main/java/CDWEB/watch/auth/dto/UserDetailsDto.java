@@ -21,7 +21,6 @@ public class UserDetailsDto {
     private String lastName;
     private String phoneNumber;
     private String email;
-    private Integer points;
     private Object authorityList;
     private List<Address> addressList;
 }
