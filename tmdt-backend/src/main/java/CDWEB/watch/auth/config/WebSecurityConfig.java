@@ -63,7 +63,11 @@ public class WebSecurityConfig {
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(publicApis).permitAll()
-                        .requestMatchers(HttpMethod.GET, "/api/products/**", "/api/category/**").permitAll()
+                        .requestMatchers("/v3/api-docs/**", "/swagger-ui/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/products/**", "/api/category/**", "/api/order", "api/category-types","/api/products/by-category-type/**").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/api/products/**", "/api/category/**").permitAll()
+                        .requestMatchers(HttpMethod.PUT, "/api/products/**", "/api/category/**").permitAll()
+                        .requestMatchers("/api/order/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .exceptionHandling(e -> e
@@ -84,7 +88,6 @@ public class WebSecurityConfig {
                 .cors(cors -> {})
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/v3/api-docs/**", "/swagger-ui/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .oauth2Login(oauth2 -> oauth2

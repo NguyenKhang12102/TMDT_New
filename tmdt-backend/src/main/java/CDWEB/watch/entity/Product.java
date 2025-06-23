@@ -53,11 +53,11 @@ public class Product {
     @Temporal(TemporalType.TIMESTAMP)
     private java.util.Date updatedAt;
 
-    @OneToMany(mappedBy = "product",cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ProductVariant> productVariants;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "category_id",nullable = false)
+    @JoinColumn(name = "category_id", nullable = false)
     @JsonIgnore
     private Category category;
 
@@ -66,7 +66,7 @@ public class Product {
     @JsonIgnore
     private CategoryType categoryType;
 
-    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Resources> resources;
 
     @PrePersist
@@ -78,5 +78,9 @@ public class Product {
     @PreUpdate
     protected void onUpdate() {
         updatedAt = new java.util.Date();
+    }
+
+    public UUID getCategoryTypeId() {
+        return categoryType != null ? categoryType.getId() : null;
     }
 }

@@ -1,33 +1,56 @@
 import React from 'react'
 import { Admin, fetchUtils, Resource, withLifecycleCallbacks, CustomRoutes, Menu, MenuItemLink } from 'react-admin'
 import simpleRestProvider from "ra-data-simple-rest";
+import { fileUploadAPI } from '../../api/fileUpload';
 import ProductList from './ProductList.jsx';
 import EditProduct from './EditProduct';
 import CreateProduct from './CreateProduct';
 import CategoryList from './Category/CategoryList';
 import CategoryEdit from './Category/CategoryEdit';
-import { fileUploadAPI } from '../../api/fileUpload';
 import OrderList from "./Order/OrderList.jsx";
 import OrderShow from "./Order/OrderShow.jsx";
 import UserList from './User/UserList';
 import UserShow from './User/UserShow';
-import Dashboard from './Dashboard.jsx';
-import { Route } from 'react-router-dom';
+import AdminDashboard from './Dashboard.jsx';
 import DashboardIcon from '@mui/icons-material/Dashboard';
 import ProductIcon from '@mui/icons-material/Storefront';
 import CategoryIcon from '@mui/icons-material/Category';
 import OrderIcon from '@mui/icons-material/ShoppingCart';
 import UserIcon from '@mui/icons-material/People';
 
+const API_BASE_URL = "http://localhost:8080";
+
 const httpClient = (url, options = {}) => {
     const token = localStorage.getItem('authToken');
-    if (!options.headers) options.headers = new Headers();
+    if (!options.headers) options.headers = new Headers({ Accept: 'application/json' });
     options.headers.set('Authorization', `Bearer ${token}`);
     return fetchUtils.fetchJson(url, options);
-}
+};
 
-const dataProvider = withLifecycleCallbacks(
-    simpleRestProvider('http://localhost:8080/api', httpClient),
+const baseProvider = simpleRestProvider(`${API_BASE_URL}/api`, httpClient);
+
+const dataProvider = {
+    ...baseProvider,
+    getList: (resource, params) => {
+        if (resource === 'category-types') {
+            return httpClient(`${API_BASE_URL}/api/category-types`).then(({ json }) => ({
+                data: json.map(item => ({ id: item.id, name: item.name })),
+                total: json.length
+            }));
+        }
+        if (resource === 'categories') {
+            return httpClient(`${API_BASE_URL}/api/category`).then(({ json }) => ({
+                data: json.map(item => ({ id: item.id, name: item.name })),
+                total: json.length
+            }));
+        }
+
+        return baseProvider.getList(resource, params);
+    },
+};
+
+const wrappedProvider = withLifecycleCallbacks(
+    dataProvider,
     [
         {
             resource: "products",
@@ -35,7 +58,6 @@ const dataProvider = withLifecycleCallbacks(
                 let requestBody = { ...params };
                 let productResList = params?.productResources ?? [];
 
-                // Upload thumbnail nếu có file mới
                 if (params?.thumbnail?.rawFile) {
                     const fileName = params.thumbnail.rawFile.name.replaceAll(' ', '-');
                     const formData = new FormData();
@@ -45,11 +67,9 @@ const dataProvider = withLifecycleCallbacks(
                     if (!res || !res.url) throw new Error("Upload thumbnail thất bại");
                     requestBody.thumbnail = res.url;
                 } else if (typeof params.thumbnail === "string") {
-                    // Nếu là link cũ, giữ nguyên
                     requestBody.thumbnail = params.thumbnail;
                 }
 
-                // Upload từng productResource nếu có file mới
                 const newProductResList = await Promise.all(
                     productResList.map(async (productResource) => {
                         if (productResource?.url?.rawFile) {
@@ -61,23 +81,22 @@ const dataProvider = withLifecycleCallbacks(
                             if (!res || !res.url) throw new Error("Upload resource thất bại");
                             return { ...productResource, url: res.url };
                         } else if (typeof productResource.url === "string") {
-                            return productResource; // giữ nguyên link cũ
+                            return productResource;
                         }
                         return productResource;
                     })
                 );
 
-                const request = {
+                return {
                     ...requestBody,
                     productResources: newProductResList
                 };
-                return request;
             }
         }
     ]
 );
 
-// Custom Menu Component
+// Custom Menu Component (No longer used directly, but keeping imports for now)
 const MyMenu = (props) => (
     <Menu {...props}>
         <MenuItemLink to="/dashboard" primaryText="Dashboard" leftIcon={<DashboardIcon />} />
@@ -90,18 +109,13 @@ const MyMenu = (props) => (
 
 export const AdminPanel = () => {
     return (
-        <Admin dataProvider={dataProvider} basename='/admin' menu={MyMenu}>
-            <CustomRoutes>
-                <Route path="/dashboard" element={<Dashboard />} />
-            </CustomRoutes>
+        <Admin dataProvider={wrappedProvider} basename='/admin' dashboard={AdminDashboard}>
             <Resource name='products' list={ProductList} edit={EditProduct} create={CreateProduct} />
             <Resource name='category' list={CategoryList} edit={CategoryEdit} />
-            <Resource
-                name='order'
-                list={OrderList}
-                show={OrderShow}
-            />
+            <Resource name="category-types" />
+            <Resource name="categories" />
+            <Resource name='order' list={OrderList} show={OrderShow} />
             <Resource name='user' list={UserList} show={UserShow} />
         </Admin>
-    )
-}
+    );
+};

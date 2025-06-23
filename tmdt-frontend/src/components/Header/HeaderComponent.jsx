@@ -101,6 +101,8 @@ const HeaderComponent = () => {
                         <NavLink to="/"
                                  className={({isActive}) => isActive ? 'text-black' : 'text-gray-500 hover:text-black'}>Trang
                             chủ</NavLink>
+                        <NavLink to="/products" className="text-gray-500 hover:text-black">Sản phẩm</NavLink>
+                        <NavLink to="/custom" className="text-gray-500 hover:text-black">Custom</NavLink>
                         {categories?.map((cat, idx) => (
                             <NavLink
                                 key={cat.code + idx}
@@ -157,6 +159,8 @@ const HeaderComponent = () => {
                     <div className="md:hidden px-6 pb-4 pt-2 space-y-2 bg-white border-t border-gray-200">
                         <NavLink to="/" className="block text-gray-800 font-medium" onClick={() => setShowMenu(false)}>Trang
                             chủ</NavLink>
+                        <NavLink to="/products" className="block text-gray-800 font-medium" onClick={() => setShowMenu(false)}>Sản phẩm</NavLink>
+                        <NavLink to="/custom" className="block text-gray-800 font-medium" onClick={() => setShowMenu(false)}>Custom</NavLink>
                         {categories?.map((cat, idx) => (
                             <NavLink key={cat.code + idx} to={`/${cat.code.toLowerCase()}`}
                                      className="block text-gray-800 font-medium" onClick={() => setShowMenu(false)}>

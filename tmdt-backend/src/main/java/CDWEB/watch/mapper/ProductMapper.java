@@ -32,24 +32,30 @@ public class ProductMapper {
         product.setRating(productDto.getRating());
         product.setSlug(productDto.getSlug());
 
-        Category category = categoryService.getCategory(productDto.getCategoryId());
-        if(null != category){
-            product.setCategory(category);
-            UUID categoryTypeId = productDto.getCategoryTypeId();
+        if (productDto.getCategoryId() != null) {
+            Category category = categoryService.getCategory(productDto.getCategoryId());
 
-            CategoryType categoryType = category.getCategoryTypes().stream().filter(categoryType1 -> categoryType1.getId().equals(categoryTypeId)).findFirst().orElse(null);
-            product.setCategoryType(categoryType);
+            if (category != null) {
+                product.setCategory(category);
+
+                if (productDto.getCategoryTypeId() != null) {
+                    CategoryType categoryType = category.getCategoryTypes().stream()
+                            .filter(ct -> ct.getId().equals(productDto.getCategoryTypeId()))
+                            .findFirst()
+                            .orElse(null);
+
+                    product.setCategoryType(categoryType);
+                }
+            }
         }
 
-        if(null != productDto.getVariants()){
-            product.setProductVariants(mapToProductVariant(productDto.getVariants(),product));
+        if (productDto.getVariants() != null) {
+            product.setProductVariants(mapToProductVariant(productDto.getVariants(), product));
         }
 
-        if(null != productDto.getProductResources()){
-            product.setResources(mapToProductResources(productDto.getProductResources(),product));
+        if (productDto.getProductResources() != null) {
+            product.setResources(mapToProductResources(productDto.getProductResources(), product));
         }
-
-
 
         return product;
     }
