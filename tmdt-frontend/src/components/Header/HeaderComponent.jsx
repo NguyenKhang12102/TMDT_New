@@ -22,7 +22,7 @@ import staticCategories from '../../data/staticCategories.js';
 import {countCartItems} from "../../store/features/cart.js";
 import Cart from '../../pages/Cart/Cart.jsx';
 import {selectShowCart, setShowCart} from "../../store/features/uiSlice.jsx";
-
+import { getMyCustomOrders } from '../../api/myordercustom.js';
 import "./headerComponent.css";
 
 import logo from "../../assets/logo/logo.png";
@@ -39,11 +39,30 @@ const HeaderComponent = () => {
     const showCart = useSelector(selectShowCart);
     const [showSearch, setShowSearch] = useState(false);
 
+   // Đảm bảo đúng đường dẫn
 
-    const [notifications, setNotifications] = useState([
-        { title: 'Đơn hàng #1234 đã được giao', time: '2 giờ trước' },
-        { title: 'Ưu đãi 20% cho thành viên VIP', time: 'Hôm qua' },
-    ]);
+    const [notifications, setNotifications] = useState([]);
+
+    useEffect(() => {
+        const fetchCustomOrders = async () => {
+            try {
+                const data = await getMyCustomOrders();
+                console.log('📦 Custom Orders từ API:', data); // 👈 THÊM DÒNG NÀY
+
+                if (Array.isArray(data)) {
+                    setNotifications(data);
+                } else {
+                    setNotifications([]);
+                    console.warn('⚠️ API không trả về mảng:', data);
+                }
+            } catch (error) {
+                console.error('❌ Lỗi tải custom orders:', error);
+            }
+        };
+
+        if (isOpen) fetchCustomOrders();
+    }, [isOpen]);
+
 
     const [showHeader, setShowHeader] = useState(true);
     const [lastScroll, setLastScroll] = useState(0);
@@ -93,14 +112,14 @@ const HeaderComponent = () => {
             >
                 <div className="relative flex items-center justify-between w-full px-6">
                     <NavLink to="/" className="flex items-center gap-2 text-2xl font-bold text-black tracking-widest">
-                            <img
-                                src={logo}
-                                alt="Triple D Logo"
-                                height={50}
-                                width={40}
-                                className="ml-[14px] -mb-[5px]"
-                            />
-                            <p className="">Triple D</p>
+                        <img
+                            src={logo}
+                            alt="Triple D Logo"
+                            height={50}
+                            width={40}
+                            className="ml-[14px] -mb-[5px]"
+                        />
+                        <p className="">Triple D</p>
                     </NavLink>
 
                     <nav
@@ -192,7 +211,7 @@ const HeaderComponent = () => {
                     {/* Ô tìm kiếm trung tâm */}
                     <div className="fixed top-[15%] mt-[130px] left-1/2 z-50 transform -translate-x-1/2 bg-white rounded-xl shadow-lg p-8 w-[95%] max-w-2xl animate-slide-down relative">
 
-                    <button
+                        <button
                             onClick={() => setShowSearch(false)}
                             className="absolute top-2 right-2 text-gray-500 hover:text-black z-50"
                         >
