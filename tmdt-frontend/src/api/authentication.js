@@ -42,4 +42,10 @@ export const verifyAPI = async (body)=>{
     catch(err){
         throw new Error(err);
     }
+
+
 }
+
+export const resendVerificationAPI = (email) => {
+    return axios.post(`${API_BASE_URL}/api/auth/resend-verification`, { email });
+};

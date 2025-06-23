@@ -118,7 +118,7 @@ public class OrderService {
 
     }
 
-    public Map<String,String> updateStatus(String paymentIntentId, String status) throws BadRequestException {
+    public Map<String,String> updateStatus(String paymentIntentId, String status) {
 
         try{
             PaymentIntent paymentIntent= PaymentIntent.retrieve(paymentIntentId);
@@ -189,11 +189,4 @@ public class OrderService {
         }
 
     }
-
-    public void updateOrderStatus(UUID id, String status) throws BadRequestException {
-        Order order = orderRepository.findById(id).orElseThrow(BadRequestException::new);
-        order.setOrderStatus(OrderStatus.valueOf(status));
-        orderRepository.save(order);
-    }
 }
-

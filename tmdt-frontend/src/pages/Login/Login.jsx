@@ -52,10 +52,12 @@ const LoginPage = () => {
         <div className="flex justify-center items-center h-screen bg-white px-4">
             <div className="w-full max-w-md bg-gray-100 rounded-3xl shadow-sm p-10 border border-gray-200">
                 <h2 className="text-3xl font-semibold text-center text-gray-900 mb-8">Đăng nhập</h2>
+                <form onSubmit={onSubmit} className="space-y-6 bg-white p-6 rounded-xl shadow-lg mt-6">
 
-                <form onSubmit={onSubmit} className="space-y-5">
                     <div>
-                        <label htmlFor="userName" className="block text-sm font-medium text-gray-700 mb-1">Email</label>
+                        <label htmlFor="userName" className="block text-sm font-medium text-gray-700 mb-2">
+                            Email
+                        </label>
                         <input
                             type="email"
                             id="userName"
@@ -64,13 +66,14 @@ const LoginPage = () => {
                             onChange={handleOnChange}
                             required
                             placeholder="you@example.com"
-                            className="w-full px-4 py-2 bg-white border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-1 focus:ring-black focus:border-black"
+                            className="w-full px-4 py-2 bg-white border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-black focus:border-black transition"
                         />
                     </div>
 
                     <div>
-                        <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-1">Mật
-                            khẩu</label>
+                        <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-2">
+                            Mật khẩu
+                        </label>
                         <input
                             type="password"
                             id="password"
@@ -79,19 +82,22 @@ const LoginPage = () => {
                             onChange={handleOnChange}
                             required
                             placeholder="••••••••"
-                            className="w-full px-4 py-2 bg-white border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-1 focus:ring-black focus:border-black"
+                            className="w-full px-4 py-2 bg-white border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-black focus:border-black transition"
                         />
                     </div>
 
-                    {error && <div className="text-sm text-red-600 text-center">{error}</div>}
+                    {error && (
+                        <div className="text-sm text-red-600 text-center -mt-2">{error}</div>
+                    )}
 
                     <button
                         type="submit"
-                        className="w-full py-3 bg-black text-white font-semibold rounded-lg hover:bg-gray-900 transition"
+                        className="w-full py-3 bg-black text-white font-semibold rounded-lg hover:bg-gray-900 transition duration-200 shadow-sm"
                     >
                         Đăng nhập
                     </button>
                 </form>
+
 
                 <div className="flex justify-between mt-5 text-sm text-gray-600">
                     <NavLink to="/forgotPass" className="hover:underline">Quên mật khẩu?</NavLink>

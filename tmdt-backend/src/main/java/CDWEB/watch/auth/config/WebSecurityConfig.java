@@ -53,7 +53,6 @@ public class WebSecurityConfig {
                         .requestMatchers(HttpMethod.GET, "/api/products", "/api/category", "/api/order","api/category-types","/api/products/by-category-type/**").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/products/**", "/api/category/**").permitAll()
                         .requestMatchers(HttpMethod.PUT, "/api/products/**", "/api/category/**").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/api/order/update-status/**", "/api/order/cancel/**").permitAll()
                         .requestMatchers("/api/order/**").permitAll()
 
                         .requestMatchers("/api/user/**").authenticated() // ✅ THÊM DÒNG NÀY
