@@ -19,7 +19,11 @@ import Profile from "../pages/Profile/Profile.jsx";
 import OAuth2LoginCallback from "../pages/OAuth2LoginCallback.jsx";
 import OrderConfirmed from "../pages/OrderConfirmed/OrderConfirmed.jsx";
 import {AdminPanel} from "../pages/Admin/AdminPanel.jsx";
+
 import ChangePasswordPage from "../pages/ChangePassword/ChangePasswordPage.jsx";
+
+
+import Custom from "../pages/Custom/Custom.jsx";
 
 const router = createBrowserRouter([
     {
@@ -27,6 +31,7 @@ const router = createBrowserRouter([
         children: [
             { path: "/", element: <Home /> },
             { path: "/products", element: <ListProductComponent categoryType={""}  /> },
+            { path: "/custom", element: <Custom /> },
             { path: "/women", element: <ListProductComponent categoryType={"WOMEN"} /> },
             { path: "/men", element: <ListProductComponent categoryType={"MEN"} /> },
 
