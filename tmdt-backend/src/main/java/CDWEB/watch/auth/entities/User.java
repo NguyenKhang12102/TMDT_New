@@ -44,6 +44,10 @@ public class User implements UserDetails {
 
     private String verificationCode;
 
+    @Column(name = "point", nullable = false)
+    private Integer point = 0;
+
+
     private boolean enabled = false;
 
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)

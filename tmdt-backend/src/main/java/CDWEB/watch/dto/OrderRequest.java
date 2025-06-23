@@ -22,4 +22,5 @@ public class OrderRequest {
     private Double discount;
     private String paymentMethod;
     private Date expectedDeliveryDate;
+    private UUID voucherId;
 }
