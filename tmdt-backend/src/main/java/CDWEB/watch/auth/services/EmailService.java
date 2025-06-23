@@ -41,6 +41,23 @@ public class EmailService {
         return "Email đã được gửi thành công.";
     }
 
+    @Autowired
+    private JavaMailSender mailSender;
 
+    public void sendVerificationEmail(String toEmail, String verificationLink) {
+        SimpleMailMessage msg = new SimpleMailMessage();
+        msg.setTo(toEmail);
+        msg.setSubject("Xác minh tài khoản");
+        msg.setText("Vui lòng nhấp vào link để xác minh tài khoản:\n" + verificationLink);
+        mailSender.send(msg);
+    }
+
+    public void sendEmailPass(String to, String subject, String content) {
+        SimpleMailMessage msg = new SimpleMailMessage();
+        msg.setTo(to);
+        msg.setSubject(subject);
+        msg.setText(content);
+        mailSender.send(msg);
+    }
 
 }

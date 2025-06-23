@@ -22,5 +22,9 @@ public interface ProductService {
     List<ProductDto> getProductsByCategoryTypeId(UUID typeId);
 
     void deleteProduct(UUID id) throws Exception;
+    List<ProductDto> getBestSellingProducts(int limit);
+    List<ProductDto> getNewestProducts(int limit);
+    List<ProductDto> getMostViewedProducts(int limit);
+
 }
 

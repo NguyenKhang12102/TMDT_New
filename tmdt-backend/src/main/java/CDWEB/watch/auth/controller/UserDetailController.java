@@ -2,9 +2,11 @@ package CDWEB.watch.auth.controller;
 
 
 import CDWEB.watch.auth.dto.ChangePasswordRequest;
+import CDWEB.watch.auth.dto.ResetPasswordRequest;
 import CDWEB.watch.auth.dto.UserDetailsDto;
 import CDWEB.watch.auth.entities.User;
 import CDWEB.watch.auth.repositories.UserDetailRepository;
+import CDWEB.watch.auth.services.CustomUserDetailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -29,6 +31,8 @@ public class UserDetailController {
 
     @Autowired
     private UserDetailRepository userRepository;
+    @Autowired
+    private CustomUserDetailService customUserDetailService;
 
 
     @GetMapping("/profile")
@@ -112,6 +116,33 @@ public class UserDetailController {
 
         return ResponseEntity.ok("Password changed successfully");
     }
+
+    @PostMapping("/forgot-password")
+    public ResponseEntity<String> forgotPassword(@RequestParam String email) {
+        try {
+            customUserDetailService.createPasswordResetToken(email);
+            return ResponseEntity.ok("Đã gửi email đặt lại mật khẩu");
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+
+    /**
+     * Đặt lại mật khẩu mới bằng token hợp lệ.
+     * @param request Chứa token và mật khẩu mới.
+     * @return Trả về thông báo kết quả đặt lại mật khẩu.
+     */
+    @PostMapping("/reset-password")
+    public ResponseEntity<String> resetPassword(@RequestBody ResetPasswordRequest request) {
+        try {
+            customUserDetailService.resetPassword(request.getToken(), request.getNewPassword());
+            return ResponseEntity.ok("Đổi mật khẩu thành công");
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
 
 
 }

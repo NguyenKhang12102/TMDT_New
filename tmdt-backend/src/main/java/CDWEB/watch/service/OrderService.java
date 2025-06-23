@@ -220,5 +220,14 @@ public class OrderService {
         order.setOrderStatus(OrderStatus.valueOf(status));
         orderRepository.save(order);
     }
+
+    public void saveOrder(Order order) {
+        orderRepository.save(order);
+    }
+    public Order fetchOrderEntityById(UUID id) throws BadRequestException {
+        return orderRepository.findById(id)
+                .orElseThrow(() -> new BadRequestException("Không tìm thấy đơn hàng với ID: " + id));
+    }
+
 }
 

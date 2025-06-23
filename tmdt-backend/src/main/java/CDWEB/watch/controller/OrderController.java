@@ -4,8 +4,10 @@ package CDWEB.watch.controller;
 
 import CDWEB.watch.auth.dto.OrderResponse;
 import CDWEB.watch.dto.OrderDetails;
-import CDWEB.watch.dto.OrderRequest;
+import CDWEB.watch.dto.OrderRequest ;
+import CDWEB.watch.dto.ProductDto;
 import CDWEB.watch.service.OrderService;
+import CDWEB.watch.service.ProductService;
 import org.apache.coyote.BadRequestException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -26,6 +28,9 @@ public class OrderController {
 
     @Autowired
     OrderService orderService;
+
+    @Autowired
+     ProductService productService;
 
 
     @GetMapping
@@ -83,4 +88,5 @@ public class OrderController {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
+
 }

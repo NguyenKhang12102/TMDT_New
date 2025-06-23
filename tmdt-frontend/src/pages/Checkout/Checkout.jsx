@@ -1,51 +1,66 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-
-// import { useNavigate } from "react-router-dom";
-
-import { setLoading } from "../../store/features/common.js";
-import { addAddressAPI, fetchUserDetails } from "../../api/UserInfo.js";
-import { selectCartItems } from "../../store/features/cart.js";
-
-import CODCheckoutForm from "./CODCheckoutForm.jsx";
-import "./Checkout.css";
-import { saveAddress } from "../../store/features/user.js";
-import { verifyVoucherAPI } from "../../api/verifyVoucher.js";
+import { setLoading } from "../../store/features/common";
+import { addAddressAPI, fetchUserDetails } from "../../api/UserInfo";
+import { selectCartItems } from "../../store/features/cart";
+import { saveAddress } from "../../store/features/user";
+import { verifyVoucherAPI } from "../../api/verifyVoucher";
+import CODCheckoutForm from "./CODCheckoutForm";
 
 const Checkout = () => {
     const dispatch = useDispatch();
     const cartItems = useSelector(selectCartItems);
 
     const [userInfo, setUserInfo] = useState({});
-    const [paymentMethod, setPaymentMethod] = useState("");
+    const [paymentMethod, setPaymentMethod] = useState("COD");
     const [voucherCode, setVoucherCode] = useState("");
     const [discount, setDiscount] = useState(0);
     const [voucherId, setVoucherId] = useState(null);
 
     const [newAddress, setNewAddress] = useState({
-        name: '',
-        phoneNumber: '',
-        street: '',
-        city: '',
-        state: 'Việt Nam',
-        zipCode: ''
+        name: "",
+        phoneNumber: "",
+        street: "",
+        city: "",
+        state: "Việt Nam",
+        zipCode: "",
     });
+
+    const cities = [
+        "Hà Nội",
+        "Hồ Chí Minh",
+        "Đà Nẵng",
+        "Hải Phòng",
+        "Cần Thơ",
+        "Bình Dương",
+        "Đồng Nai",
+        "Khánh Hòa",
+        "Lâm Đồng",
+        "Quảng Ninh",
+        "Thừa Thiên Huế",
+        "Bắc Ninh",
+        "Thanh Hóa",
+        "Nghệ An",
+        "Hải Dương",
+        "Vĩnh Phúc",
+    ];
 
     const [formErrors, setFormErrors] = useState({});
 
-    const cities = [/* danh sách tỉnh thành Việt Nam - như cũ */];
+    const subTotal = useMemo(
+        () => cartItems.reduce((total, item) => total + (item.subTotal || 0), 0).toFixed(2),
+        [cartItems]
+    );
 
-    const subTotal = useMemo(() => {
-        return cartItems.reduce((total, item) => total + (item.subTotal || 0), 0).toFixed(2);
-    }, [cartItems]);
+    const discountAmount = useMemo(
+        () => ((parseFloat(subTotal) * discount) / 100).toFixed(2),
+        [subTotal, discount]
+    );
 
-    const discountAmount = useMemo(() => {
-        return ((parseFloat(subTotal) * discount) / 100).toFixed(2);
-    }, [subTotal, discount]);
-
-    const totalAmount = useMemo(() => {
-        return (parseFloat(subTotal) - parseFloat(discountAmount)).toFixed(2);
-    }, [subTotal, discountAmount]);
+    const totalAmount = useMemo(
+        () => (parseFloat(subTotal) - parseFloat(discountAmount)).toFixed(2),
+        [subTotal, discountAmount]
+    );
 
     useEffect(() => {
         dispatch(setLoading(true));
@@ -55,16 +70,16 @@ const Checkout = () => {
                 const defaultAddress = res.addressList?.[0];
                 if (defaultAddress) {
                     setNewAddress({
-                        name: defaultAddress.name || '',
-                        phoneNumber: defaultAddress.phoneNumber || '',
-                        street: defaultAddress.street || '',
-                        city: defaultAddress.city || '',
-                        state: defaultAddress.state || 'Việt Nam',
-                        zipCode: defaultAddress.zipCode || ''
+                        name: defaultAddress.name || "",
+                        phoneNumber: defaultAddress.phoneNumber || "",
+                        street: defaultAddress.street || "",
+                        city: defaultAddress.city || "",
+                        state: defaultAddress.state || "Việt Nam",
+                        zipCode: defaultAddress.zipCode || "",
                     });
                 }
             })
-            .catch((err) => console.error(err))
+            .catch(console.error)
             .finally(() => dispatch(setLoading(false)));
     }, [dispatch]);
 
@@ -79,9 +94,8 @@ const Checkout = () => {
             error = "Địa chỉ phải có ít nhất 5 ký tự";
         }
         if (name === "city" && !value.trim()) {
-            error = "Vui lòng nhập tỉnh/thành phố";
+            error = "Vui lòng chọn tỉnh/thành phố";
         }
-
         setFormErrors((prev) => ({ ...prev, [name]: error }));
     };
 
@@ -116,173 +130,171 @@ const Checkout = () => {
         }
     };
 
-
-
     const handleApplyVoucher = async () => {
         try {
             const result = await verifyVoucherAPI(voucherCode, userInfo.id);
-            console.log("✅ Voucher hợp lệ:", result);
-            setDiscount(result.discountPercentage); // giảm giá %
-            setVoucherId(result.voucherId);         // lưu ID voucher để gửi backend khi đặt hàng
+            setDiscount(result.discountPercentage);
+            setVoucherId(result.voucherId);
         } catch (err) {
             alert(err.message);
         }
     };
 
-
-
-
     return (
-        <div className="checkout-wrapper">
-            <div className="checkout-left">
-                <h2>Thông tin khách hàng</h2>
-                <div className="customer-info-form">
-                    <div className="form-group">
-                        <label>Họ và tên *</label>
-                        <input
-                            type="text"
-                            name="name"
-                            value={newAddress.name}
-                            onChange={handleCustomerInfoChange}
-                            placeholder="Nhập họ và tên"
-                        />
-                        {formErrors.name && <p className="form-error">{formErrors.name}</p>}
-                    </div>
-
-                    <div className="form-group">
-                        <label>Số điện thoại *</label>
-                        <input
-                            type="tel"
-                            name="phoneNumber"
-                            value={newAddress.phoneNumber}
-                            onChange={handleCustomerInfoChange}
-                            placeholder="Số điện thoại"
-                        />
-                        {formErrors.phoneNumber && <p className="form-error">{formErrors.phoneNumber}</p>}
-                    </div>
-
-                    <div className="form-group">
-                        <label>Quốc gia</label>
-                        <input type="text" name="state" value={newAddress.state} disabled />
+        <div className="container mx-auto px-6 py-8 grid grid-cols-1 lg:grid-cols-3 gap-10">
+            <div className="lg:col-span-2 space-y-8">
+                <div className="bg-white p-6 rounded-lg shadow">
+                    <h2 className="text-xl font-semibold mb-4">Thông tin khách hàng</h2>
+                    <div className="space-y-4">
+                        {['name', 'phoneNumber'].map((field) => (
+                            <div key={field} className="space-y-1">
+                                <label className="block text-sm font-medium text-gray-700">
+                                    {field === 'name' ? 'Họ và tên *' : 'Số điện thoại *'}
+                                </label>
+                                <input
+                                    type={field === 'phoneNumber' ? 'tel' : 'text'}
+                                    name={field}
+                                    value={newAddress[field]}
+                                    onChange={handleCustomerInfoChange}
+                                    className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring focus:ring-blue-400"
+                                />
+                                {formErrors[field] && (
+                                    <p className="text-sm text-red-500">{formErrors[field]}</p>
+                                )}
+                            </div>
+                        ))}
                     </div>
                 </div>
 
-                <h2>Thông tin nhận hàng</h2>
-                <div className="customer-info-form">
-                    <div className="form-group">
-                        <label>Địa chỉ *</label>
-                        <input
-                            type="text"
-                            name="street"
-                            value={newAddress.street}
-                            onChange={handleCustomerInfoChange}
-                            placeholder="Số nhà - Tên đường - Thôn/Xã"
-                        />
-                        {formErrors.street && <p className="form-error">{formErrors.street}</p>}
-                    </div>
+                <div className="bg-white p-6 rounded-lg shadow">
+                    <h2 className="text-xl font-semibold mb-4">Thông tin nhận hàng</h2>
+                    <div className="space-y-4">
+                        <div className="space-y-1">
+                            <label className="text-sm font-medium text-gray-700">Địa chỉ *</label>
+                            <input
+                                type="text"
+                                name="street"
+                                value={newAddress.street}
+                                onChange={handleCustomerInfoChange}
+                                className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring focus:ring-blue-400"
+                            />
+                            {formErrors.street && <p className="text-sm text-red-500">{formErrors.street}</p>}
+                        </div>
 
-                    <div className="form-group">
-                        <label>Tỉnh/Thành phố *</label>
-                        <select
-                            name="city"
-                            value={newAddress.city}
-                            onChange={handleCustomerInfoChange}
-                        >
-                            <option value="">-- Chọn tỉnh/thành phố --</option>
-                            {cities.map((c) => (
-                                <option key={c} value={c}>{c}</option>
-                            ))}
-                        </select>
-                        {formErrors.city && <p className="form-error">{formErrors.city}</p>}
+                        <div className="space-y-1">
+                            <label className="text-sm font-medium text-gray-700">Tỉnh/Thành phố *</label>
+                            <select
+                                name="city"
+                                value={newAddress.city}
+                                onChange={handleCustomerInfoChange}
+                                className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring focus:ring-blue-400"
+                            >
+                                <option value="">-- Chọn tỉnh/thành phố --</option>
+                                {cities.map((c) => (
+                                    <option key={c} value={c}>{c}</option>
+                                ))}
+                            </select>
+                            {formErrors.city && <p className="text-sm text-red-500">{formErrors.city}</p>}
+                        </div>
                     </div>
                 </div>
 
-                <div className="checkout-form mt-6">
-                    <div className="form-group">
-                        <p>Phương thức thanh toán</p>
-                        <label>
+                <div className="space-y-4">
+                    <p className="text-lg font-semibold">Phương thức thanh toán</p>
+                    <div className="flex items-center space-x-6">
+                        <div className="flex items-center space-x-2">
                             <input
                                 type="radio"
                                 name="payment"
                                 value="COD"
                                 checked={paymentMethod === "COD"}
                                 onChange={(e) => setPaymentMethod(e.target.value)}
+                                id="payment-cod"
+                                className="w-4 h-4"
                             />
-                            Thanh toán khi nhận hàng (COD)
-                        </label>
-                        <label>
+                            <label htmlFor="payment-cod" className="text-sm">Thanh toán khi giao hàng (COD)</label>
+                        </div>
+                        <div className="flex items-center space-x-2">
                             <input
                                 type="radio"
                                 name="payment"
-                                value="CARD"
-                                checked={paymentMethod === "CARD"}
+                                value="VNPAY"
+                                checked={paymentMethod === "VNPAY"}
                                 onChange={(e) => setPaymentMethod(e.target.value)}
+                                id="payment-vnpay"
+                                className="w-4 h-4"
                             />
-                            Thanh toán qua MOMO
-                        </label>
+                            <label htmlFor="payment-vnpay" className="text-sm">Thanh toán qua VNPAY</label>
+                        </div>
                     </div>
-
-                    <CODCheckoutForm
-                        userId={userInfo?.id}
-                        addressId={userInfo?.addressList?.[0]?.id}
-                        newAddress={newAddress}
-                        handleAddAddress={handleAddAddress}
-                        discount={discount}
-                        voucherId={voucherId}
-                        totalAmount={totalAmount}
-                    />
-
                 </div>
+
+                <CODCheckoutForm
+                    userId={userInfo?.id}
+                    addressId={userInfo?.addressList?.[0]?.id}
+                    newAddress={newAddress}
+                    handleAddAddress={handleAddAddress}
+                    discount={discount}
+                    voucherId={voucherId}
+                    totalAmount={totalAmount}
+                />
             </div>
 
-            <div className="checkout-right">
-                <div className="product-summary">
-                    {cartItems.map((item, index) => (
-                        <div key={index} className="product-item flex items-center gap-4 mb-4">
-                            <img src={item.thumbnail} alt={item.name} className="w-16 h-16 object-cover rounded" />
-                            <div className="flex-1">
-                                <p className="font-medium text-sm">{item.name}</p>
-                                <p className="text-xs text-gray-500">Số lượng: {item.quantity}</p>
+            <div className="bg-white p-6 rounded-lg shadow max-w-md w-full">
+                <h2 className="text-xl font-semibold mb-4">Tóm tắt đơn hàng</h2>
+                <div className="space-y-4">
+                    {cartItems.map((item, idx) => (
+                        <div key={idx} className="flex items-center justify-between">
+                            <div className="flex items-center gap-3">
+                                <img src={item.thumbnail} alt={item.name} className="w-14 h-14 object-cover rounded"/>
+                                <div>
+                                    <p className="text-sm font-medium">{item.name}</p>
+                                    <p className="text-xs text-gray-500">Số lượng: {item.quantity}</p>
+                                </div>
                             </div>
-                            <span className="font-semibold">{item.subTotal.toLocaleString()}₫</span>
+                            <span className="font-medium">{item.subTotal.toLocaleString()}₫</span>
                         </div>
                     ))}
-                </div>
 
-                <div className="discount-input">
-                    <input
-                        type="text"
-                        placeholder="Mã giảm giá"
-                        value={voucherCode}
-                        onChange={(e) => setVoucherCode(e.target.value)}
-                    />
-                    <button className="apply-btn" onClick={handleApplyVoucher}>Sử dụng</button>
-                </div>
-
-                <div className="totals">
-                    <div className="row">
-                        <span>Tạm tính</span>
-                        <span>{parseFloat(subTotal).toLocaleString()}₫</span>
+                    <div className="flex gap-2">
+                        <input
+                            type="text"
+                            className="flex-1 p-2 border border-gray-300 rounded"
+                            placeholder="Mã giảm giá"
+                            value={voucherCode}
+                            onChange={(e) => setVoucherCode(e.target.value)}
+                        />
+                        <button
+                            onClick={handleApplyVoucher}
+                            className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+                        >
+                            Áp dụng
+                        </button>
                     </div>
 
-                    {discount > 0 && (
-                        <div className="row text-green-600">
-                            <span>Giảm giá ({discount}%)</span>
-                            <span>-{parseFloat(discountAmount).toLocaleString()}₫</span>
+                    <div className="border-t pt-4 space-y-2 text-sm">
+                        <div className="flex justify-between">
+                            <span>Tạm tính</span>
+                            <span>{parseFloat(subTotal).toLocaleString()}₫</span>
                         </div>
-                    )}
-
-                    <div className="row">
-                        <span>Phí vận chuyển</span>
-                        <span>Miễn phí</span>
-                    </div>
-
-                    <div className="row total font-bold text-lg">
-                        <span>Tổng cộng</span>
-                        <span>{parseFloat(totalAmount).toLocaleString()}₫</span>
+                        {discount > 0 && (
+                            <div className="flex justify-between text-green-600">
+                                <span>Giảm giá ({discount}%)</span>
+                                <span>-{parseFloat(discountAmount).toLocaleString()}₫</span>
+                            </div>
+                        )}
+                        <div className="flex justify-between">
+                            <span>Phí vận chuyển</span>
+                            <span>Miễn phí</span>
+                        </div>
+                        <div className="flex justify-between font-semibold text-lg">
+                            <span>Tổng cộng</span>
+                            <span>{parseFloat(totalAmount).toLocaleString()}₫</span>
+                        </div>
                     </div>
                 </div>
             </div>
+
         </div>
     );
 };

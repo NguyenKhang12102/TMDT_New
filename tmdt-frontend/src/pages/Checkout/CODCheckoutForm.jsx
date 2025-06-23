@@ -73,7 +73,6 @@ const CODCheckoutForm = ({  userId,
 
     return (
         <form className='items-center p-2 mt-4 w-[320px]' onSubmit={handleSubmit}>
-            <p className='mb-2 text-sm text-gray-600'>Xác nhận đơn hàng và thanh toán khi nhận hàng</p>
             <button
                 type='submit'
                 className='w-[150px] items-center h-[48px] bg-black border rounded-lg mt-4 text-white hover:bg-gray-800'

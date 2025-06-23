@@ -24,6 +24,8 @@
         private String thumbnail;
         private String slug;
         private String categoryName;
+        private Long totalSold; // thêm dòng này
+
 
         private UUID categoryTypeId;
         private String categoryTypeName;

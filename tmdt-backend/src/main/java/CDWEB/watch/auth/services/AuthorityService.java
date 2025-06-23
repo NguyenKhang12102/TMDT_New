@@ -31,4 +31,6 @@
             Authority authority= Authority.builder().roleCode(role).roleDescription(description).build();
             return authorityRepository.save(authority);
         }
+
+
     }
