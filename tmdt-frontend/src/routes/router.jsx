@@ -1,25 +1,24 @@
 // router.jsx
 import { createBrowserRouter } from "react-router-dom";
 
-import MainLayout from "./components/layout";
-import Home from "./pages/Home/Home.jsx";
-import ListProductComponent from "./pages/ProductList/ProductList.jsx";
-import ProductDetail from "./pages/ProductDetail/Productdetail.jsx";
-import Cart from "./pages/Cart/Cart.jsx";
-import Checkout from "./pages/Checkout/Checkout.jsx";
-import Login from "./pages/Login/Login.jsx";
-import Register from "./pages/Register/Register.jsx";
-import ForgotPass from "./pages/ForgotPass/ForgotPass.jsx";
-import Services from "./pages/Services/Services.jsx";
-import Contact from "./pages/Contact/Contact.jsx";
-import AboutUs from "./pages/AboutUs/AboutUs.jsx";
-import ProtectedRoute from "./components/ProtectedRoute/ProtectedRoute";
+import MainLayout from "../components/layout.jsx";
+import Home from "../pages/Home/Home.jsx";
+import ListProductComponent from "../pages/ProductList/ProductList.jsx";
+import ProductDetail from "../pages/ProductDetail/Productdetail.jsx";
+import Cart from "../pages/Cart/Cart.jsx";
+import Checkout from "../pages/Checkout/Checkout.jsx";
+import Login from "../pages/Login/Login.jsx";
+import Register from "../pages/Register/Register.jsx";
+import ForgotPass from "../pages/ForgotPass/ForgotPass.jsx";
+import Contact from "../pages/Contact/Contact.jsx";
+import AboutUs from "../pages/AboutUs/AboutUs.jsx";
+import ProtectedRoute from "../components/ProtectedRoute/ProtectedRoute.jsx";
 
-import { loadProductBySlug } from "./routes/products.js";
-import Profile from "./pages/Profile/Profile.jsx";
-import OAuth2LoginCallback from "./pages/OAuth2LoginCallback.jsx";
-import OrderConfirmed from "./pages/OrderConfirmed/OrderConfirmed";
-import {AdminPanel} from "./pages/Admin/AdminPanel.jsx";
+import { loadProductBySlug } from "./products.js";
+import Profile from "../pages/Profile/Profile.jsx";
+import OAuth2LoginCallback from "../pages/OAuth2LoginCallback.jsx";
+import OrderConfirmed from "../pages/OrderConfirmed/OrderConfirmed.jsx";
+import {AdminPanel} from "../pages/Admin/AdminPanel.jsx";
 
 const router = createBrowserRouter([
     {
@@ -42,7 +41,6 @@ const router = createBrowserRouter([
             { path: "/login", element: <Login /> },
             { path: "/register", element: <Register /> },
             { path: "/forgotPass", element: <ForgotPass /> },
-            { path: "/services", element: <Services /> },
             { path: "/contact", element: <Contact /> },
             { path: "/aboutus", element: <AboutUs /> },
             { path: "/profile", element: <Profile /> },

@@ -105,8 +105,9 @@ const HeaderComponent = () => {
                                  className={({isActive}) => isActive ? 'text-black' : 'text-gray-500 hover:text-black'}>Trang
                             chủ</NavLink>
                         <NavLink to="/products" className="text-gray-500 hover:text-black">Sản phẩm</NavLink>
+                        <NavLink to="/custom" className="text-gray-500 hover:text-black">Custom</NavLink>
                         <NavLink to="/aboutus" className="text-gray-500 hover:text-black">Giới thiệu</NavLink>
-                        <NavLink to="/services" className="text-gray-500 hover:text-black">Dịch vụ</NavLink>
+
                         <NavLink to="/contact" className="text-gray-500 hover:text-black">Liên hệ</NavLink>
                     </nav>
 

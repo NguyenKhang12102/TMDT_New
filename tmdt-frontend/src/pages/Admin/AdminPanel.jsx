@@ -1,17 +1,17 @@
 import React from 'react';
 import { Admin, fetchUtils, Resource, withLifecycleCallbacks } from 'react-admin';
 import simpleRestProvider from "ra-data-simple-rest";
-
+import { fileUploadAPI } from '../../api/fileUpload';
 import ProductList from './ProductList.jsx';
 import EditProduct from './EditProduct';
 import CreateProduct from './CreateProduct';
 import CategoryList from './Category/CategoryList';
 import CategoryEdit from './Category/CategoryEdit';
-import { fileUploadAPI } from '../../api/fileUpload';
 import OrderList from "./Order/OrderList.jsx";
 import OrderShow from "./Order/OrderShow.jsx";
 import UserList from './User/UserList';
 import UserShow from './User/UserShow';
+import AdminDashboard from './AdminDashboard.jsx'; // ✅ thêm dòng này
 
 const API_BASE_URL = "http://localhost:8080";
 
@@ -24,7 +24,6 @@ const httpClient = (url, options = {}) => {
 
 const baseProvider = simpleRestProvider(`${API_BASE_URL}/api`, httpClient);
 
-// Gói lại provider để override riêng getList của 2 resource
 const dataProvider = {
     ...baseProvider,
     getList: (resource, params) => {
@@ -45,7 +44,6 @@ const dataProvider = {
     },
 };
 
-// Thêm upload file
 const wrappedProvider = withLifecycleCallbacks(
     dataProvider,
     [
@@ -95,7 +93,7 @@ const wrappedProvider = withLifecycleCallbacks(
 
 export const AdminPanel = () => {
     return (
-        <Admin dataProvider={wrappedProvider} basename='/admin'>
+        <Admin dataProvider={wrappedProvider} basename='/admin' dashboard={AdminDashboard}>
             <Resource name='products' list={ProductList} edit={EditProduct} create={CreateProduct} />
             <Resource name='category' list={CategoryList} edit={CategoryEdit} />
             <Resource name="category-types" />
