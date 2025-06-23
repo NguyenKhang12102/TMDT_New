@@ -1,9 +1,9 @@
 import React, { useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { saveToken } from '../utils/jwt-helper';
+import { saveToken } from '../utils/jwt-helper.js';
 import {useDispatch} from "react-redux";
-import { setAuthenticated } from '../store/features/authSlice';
-import { loadUserInfo } from '../store/features/user';
+import { setAuthenticated } from '../store/features/authSlice.jsx';
+import { loadUserInfo } from '../store/features/user.js';
 import { fetchUserDetails } from '../api/UserInfo.js';
 
 

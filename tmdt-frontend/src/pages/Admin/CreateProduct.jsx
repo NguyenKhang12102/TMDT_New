@@ -1,7 +1,7 @@
 
 import React from 'react'
 import { ArrayInput, BooleanInput, Create, ImageField, ImageInput, NumberInput, ReferenceInput, required, SelectField, SelectInput, SimpleForm, SimpleFormIterator, TextInput } from 'react-admin'
-import CategoryTypeInput from './Category/CategoryTypeInput';
+import CategoryTypeInput from './Category/CategoryTypeInput.jsx';
 import { colorSelector } from '../../components/Filters/ColorsFilter.jsx';
 import ImageOrUrlInput from './compoment/ImageOrUrlInput.jsx';
 export const sizeSelector =[""]

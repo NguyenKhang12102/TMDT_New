@@ -150,10 +150,8 @@ public class OrderService {
     }
 
 
+    public Map<String,String> updateStatus(String paymentIntentId, String status) throws BadRequestException {
 
-
-
-    public Map<String, String> updateStatus(String paymentIntentId, String status) {
         try {
             PaymentIntent paymentIntent = PaymentIntent.retrieve(paymentIntentId);
             if (paymentIntent != null && paymentIntent.getStatus().equals("succeeded")) {
@@ -216,4 +214,11 @@ public class OrderService {
             throw new RuntimeException("Invalid request");
         }
     }
+
+    public void updateOrderStatus(UUID id, String status) throws BadRequestException {
+        Order order = orderRepository.findById(id).orElseThrow(BadRequestException::new);
+        order.setOrderStatus(OrderStatus.valueOf(status));
+        orderRepository.save(order);
+    }
 }
+

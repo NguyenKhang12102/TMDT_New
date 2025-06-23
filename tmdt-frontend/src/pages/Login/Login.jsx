@@ -1,11 +1,11 @@
 import React, { useCallback, useState } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { useDispatch } from "react-redux";
-import { setLoading } from "../../store/features/common";
-import { loginAPI } from '../../api/authentication';
-import { saveToken } from "../../utils/jwt-helper";
-import { setAuthenticated } from "../../store/features/authSlice";
-import { loadUserInfo } from "../../store/features/user";
+import { setLoading } from "../../store/features/common.js";
+import { loginAPI } from '../../api/authentication.js';
+import { saveToken } from "../../utils/jwt-helper.js";
+import { setAuthenticated } from "../../store/features/authSlice.jsx";
+import { loadUserInfo } from "../../store/features/user.js";
 import { fetchUserDetails } from '../../api/UserInfo.js';
 import GoogleSignIn from "../../components/Buttons/GoogleSignIn.jsx";
 

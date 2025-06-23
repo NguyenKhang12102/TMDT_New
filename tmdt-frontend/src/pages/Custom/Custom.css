@@ -1,0 +1,336 @@
+.custom-page-container {
+    padding: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+    font-family: Arial, sans-serif;
+    color: #333;
+}
+
+/* Hero Section */
+.hero-section {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: #fff;
+    padding: 5rem 0;
+    margin-bottom: 3rem;
+}
+
+.hero-content {
+    flex: 1;
+    padding-right: 2rem;
+}
+
+.hero-discount {
+    color: #f76b1c; /* Orange color from the image */
+    font-size: 1.1rem;
+    margin-bottom: 0.5rem;
+    font-weight: bold;
+}
+
+.hero-title {
+    font-size: 3.5rem;
+    font-weight: bold;
+    line-height: 1.1;
+    margin-bottom: 1.5rem;
+    color: #000;
+}
+
+.hero-description {
+    font-size: 1.1rem;
+    color: #555;
+    line-height: 1.6;
+    margin-bottom: 2rem;
+}
+
+.hero-buttons {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.start-button {
+    background-color: #000;
+    color: #fff;
+    padding: 1rem 2.5rem;
+    border-radius: 30px;
+    font-size: 1.1rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    border: none;
+}
+
+.start-button:hover {
+    background-color: #333;
+}
+
+.start-button .arrow {
+    font-size: 1.2rem;
+}
+
+.explore-link {
+    color: #000;
+    font-size: 1.1rem;
+    font-weight: bold;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.explore-link:hover {
+    color: #f76b1c;
+}
+
+.customer-satisfaction {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    color: #555;
+    font-size: 1rem;
+}
+
+.customer-icons {
+    /* Placeholder for customer review icons/avatars */
+    width: 80px; /* Adjust as needed */
+    height: 30px; /* Adjust as needed */
+    background-color: #eee;
+    border-radius: 15px;
+}
+
+.hero-image-container {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.hero-image {
+    max-width: 100%;
+    height: auto;
+    border-radius: 10px; /* If the image has sharp corners */
+}
+
+/* Brands Section */
+.brands-section {
+    background-color: #f0f0f0; /* Light grey background */
+    padding: 2rem 0;
+    text-align: center;
+    margin-bottom: 3rem;
+}
+
+.brands-title {
+    font-size: 1.5rem;
+    color: #555;
+    margin-bottom: 2rem;
+}
+
+.brand-logos {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 2rem;
+}
+
+.brand-logo {
+    max-width: 120px;
+    height: auto;
+    object-fit: contain;
+}
+
+/* Create Section (formerly custom-main-title and custom-subtitle) */
+.create-section {
+    text-align: center;
+    padding: 3rem 0;
+}
+
+.create-main-title {
+    font-size: 2.5rem;
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+    color: #000;
+}
+
+.create-subtitle {
+    font-size: 1.1rem;
+    color: #555;
+}
+
+/* Custom Sections Wrapper (Upload and Request) */
+.custom-sections-wrapper {
+    display: flex;
+    gap: 2rem;
+    margin-bottom: 4rem;
+}
+
+.custom-upload-section,
+.custom-request-section {
+    flex: 1;
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    min-height: 300px;
+}
+
+.upload-icon {
+    color: #007bff;
+    margin-bottom: 1rem;
+}
+
+.upload-title {
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+}
+
+.upload-description {
+    color: #777;
+    margin-bottom: 1rem;
+}
+
+.custom-upload-section input[type="file"] {
+    margin-bottom: 1rem;
+    padding: 0.5rem;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.custom-upload-section button {
+    background-color: #007bff;
+    color: #fff;
+    padding: 0.8rem 1.5rem;
+    border-radius: 5px;
+    border: none;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: background-color 0.3s ease;
+}
+
+.custom-upload-section button:disabled {
+    background-color: #cccccc;
+    cursor: not-allowed;
+}
+
+.custom-upload-section button:hover:not(:disabled) {
+    background-color: #0056b3;
+}
+
+.custom-upload-section p {
+    margin-top: 0.5rem;
+    font-size: 0.9rem;
+    color: #333;
+}
+
+.custom-upload-section p a {
+    color: #007bff;
+    text-decoration: none;
+}
+
+.custom-upload-section p a:hover {
+    text-decoration: underline;
+}
+
+.request-textarea {
+    width: 100%;
+    flex-grow: 1;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    padding: 1rem;
+    margin-bottom: 1rem;
+    font-size: 1rem;
+    resize: vertical;
+    min-height: 150px;
+}
+
+.send-request-button {
+    background-color: #000;
+    color: #fff;
+    padding: 0.8rem 2rem;
+    border-radius: 25px;
+    font-size: 1.1rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.send-request-button:hover {
+    background-color: #333;
+}
+
+/* Custom Bottom Section */
+.custom-bottom-section {
+    background-color: #000;
+    color: #fff;
+    padding: 4rem 2rem;
+    text-align: center;
+    border-radius: 10px;
+    margin-top: 3rem; /* Added margin for spacing */
+}
+
+.bottom-title {
+    font-size: 2.2rem;
+    font-weight: bold;
+    margin-bottom: 1rem;
+}
+
+.bottom-subtitle {
+    font-size: 1.1rem;
+    margin-bottom: 3rem;
+    color: #bbb;
+}
+
+.bottom-image-placeholders {
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+}
+
+.image-placeholder {
+    width: 200px;
+    height: 200px;
+    object-fit: contain; /* Ensure images scale correctly */
+    border-radius: 10px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .hero-section {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .hero-content {
+        padding-right: 0;
+        margin-bottom: 2rem;
+    }
+
+    .hero-buttons {
+        justify-content: center;
+    }
+
+    .hero-title {
+        font-size: 2.5rem;
+    }
+
+    .brands-title {
+        font-size: 1.2rem;
+    }
+
+    .create-main-title {
+        font-size: 2rem;
+    }
+
+    .custom-sections-wrapper {
+        flex-direction: column;
+    }
+} 

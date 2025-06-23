@@ -4,6 +4,7 @@ import { setLoading } from '../../store/features/common';
 import { setAuthenticated } from "../../store/features/authSlice";
 import { addAddressAPI, fetchUserDetails } from '../../api/UserInfo.js';
 import { loadUserInfo, saveAddress, selectUserInfo, selectIsUserAdmin } from '../../store/features/user.js';
+
 import { Link } from "react-router-dom";
 import { getToken } from "../../utils/jwt-helper.js";
 
@@ -90,11 +91,13 @@ const ProfilePage = () => {
 
     return (
         <div className="w-full max-w-4xl mx-auto mt-12 p-8 bg-gradient-to-br from-white to-blue-50 shadow-xl rounded-2xl font-sans min-h-[550px] mb-12">
+
             {isUserAdmin && (
                 <div className="text-right">
                     <Link to={"/admin"} className="text-lg text-blue-900 underline">Manage Admin</Link>
                 </div>
             )}
+
             <div className="flex flex-col lg:flex-row gap-8">
                 {hasAvatar && (
                     <div className="flex justify-center lg:justify-start">
@@ -215,6 +218,14 @@ const ProfilePage = () => {
                         <p className="text-center text-gray-500 mt-6">Đang tải thông tin người dùng...</p>
                     )}
                 </div>
+            </div>
+            <div className="text-right mt-10">
+                <Link
+                    to="/change-password"
+                    className="inline-block px-6 py-2 bg-yellow-500 text-white font-semibold rounded-lg shadow-md hover:bg-yellow-600 transition"
+                >
+                    Đổi mật khẩu
+                </Link>
             </div>
         </div>
     );
