@@ -1,9 +1,9 @@
 import React, { useMemo, useState, useEffect, useCallback } from 'react';
 import { Link, useLoaderData } from 'react-router-dom';
-import { getProductByTypeId } from '../../api/fetchProducts';
+import { getProductByTypeId } from '../../api/fetchProducts.js';
 import { useDispatch, useSelector } from 'react-redux';
 import ProductCard from '../ProductList/ProductCard.jsx';
-import { addItemToCartAction } from '../../store/actions/cartAction';
+import { addItemToCartAction } from '../../store/actions/cartAction.js';
 import CustomerReviewDetail from "../../components/CustomerReviewDetail/CustomerReviewDetail.jsx";
 import { setShowCart } from "../../store/features/uiSlice.jsx";
 

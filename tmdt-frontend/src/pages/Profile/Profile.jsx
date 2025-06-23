@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { setLoading } from '../../store/features/common';
-import { setAuthenticated } from "../../store/features/authSlice";
+import { setLoading } from '../../store/features/common.js';
+import { setAuthenticated } from "../../store/features/authSlice.jsx";
 import { addAddressAPI } from '../../api/UserInfo.js';
 import {saveAddress, selectUserInfo, selectIsUserAdmin} from '../../store/features/user.js';
 import { Link } from "react-router-dom";
@@ -56,7 +56,7 @@ const ProfilePage = () => {
     return (
 
         <div className="w-full max-w-4xl mx-auto mt-12 p-8 bg-gradient-to-br from-white to-blue-50 shadow-xl rounded-2xl font-sans min-h-[550px] mb-12">
-            {isUserAdmin && <div className="text-right"><Link to={"/admin"} className="text-lg text-blue-900 underline">Manage Admin</Link></div>}
+            {isUserAdmin && <div className="text-right"><Link to={"/admin/"} className="text-lg text-blue-900 underline">Manage Admin Dashboard</Link></div>}
             <div className="flex flex-col lg:flex-row gap-8">
                 {hasAvatar && (
                     <div className="flex justify-center lg:justify-start">

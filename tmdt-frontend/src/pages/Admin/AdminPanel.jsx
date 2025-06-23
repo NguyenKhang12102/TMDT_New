@@ -1,16 +1,16 @@
 import React from 'react';
 import { Admin, fetchUtils, Resource, withLifecycleCallbacks } from 'react-admin';
 import simpleRestProvider from "ra-data-simple-rest";
-import { fileUploadAPI } from '../../api/fileUpload';
+import { fileUploadAPI } from '../../api/fileUpload.js';
 import ProductList from './ProductList.jsx';
-import EditProduct from './EditProduct';
-import CreateProduct from './CreateProduct';
-import CategoryList from './Category/CategoryList';
-import CategoryEdit from './Category/CategoryEdit';
+import EditProduct from './EditProduct.jsx';
+import CreateProduct from './CreateProduct.jsx';
+import CategoryList from './Category/CategoryList.jsx';
+import CategoryEdit from './Category/CategoryEdit.jsx';
 import OrderList from "./Order/OrderList.jsx";
 import OrderShow from "./Order/OrderShow.jsx";
-import UserList from './User/UserList';
-import UserShow from './User/UserShow';
+import UserList from './User/UserList.jsx';
+import UserShow from './User/UserShow.jsx';
 import AdminDashboard from './AdminDashboard.jsx'; // ✅ thêm dòng này
 
 const API_BASE_URL = "http://localhost:8080";
