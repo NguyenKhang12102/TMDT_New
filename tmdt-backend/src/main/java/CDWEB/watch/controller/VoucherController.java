@@ -42,6 +42,7 @@ public class VoucherController {
             return ResponseEntity.badRequest().body("Bạn không đủ điểm để đổi voucher này.");
         }
 
+        
         Voucher voucher = voucherService.redeemVoucher(user, points, discount);
         return ResponseEntity.ok(Map.of(
                 "voucherId", voucher.getId(),
