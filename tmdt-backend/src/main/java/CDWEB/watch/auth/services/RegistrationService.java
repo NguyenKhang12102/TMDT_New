@@ -1,6 +1,5 @@
 package CDWEB.watch.auth.services;
 
-
 import CDWEB.watch.auth.dto.RegistrationRequest;
 import CDWEB.watch.auth.dto.RegistrationResponse;
 import CDWEB.watch.auth.entities.User;
@@ -10,6 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ServerErrorException;
+
+import java.util.Optional;
 
 @Service
 public class RegistrationService {
@@ -28,17 +29,16 @@ public class RegistrationService {
 
     public RegistrationResponse createUser(RegistrationRequest request) {
 
-        User existing = userDetailRepository.findByEmail(request.getEmail());
+        Optional<User> existing = userDetailRepository.findByEmail(request.getEmail());
 
-        if(null != existing){
-            return  RegistrationResponse.builder()
+        if (existing.isPresent()) {
+            return RegistrationResponse.builder()
                     .code(400)
-                    .message("Email already exist!")
+                    .message("Email đã tồn tại!")
                     .build();
         }
 
-        try{
-
+        try {
             User user = new User();
             user.setFirstName(request.getFirstName());
             user.setLastName(request.getLastName());
@@ -48,29 +48,30 @@ public class RegistrationService {
             user.setPassword(passwordEncoder.encode(request.getPassword()));
             user.setProvider("manual");
 
-             String code = VerificationCodeGenerator.generateCode();
-
+            String code = VerificationCodeGenerator.generateCode();
             user.setVerificationCode(code);
             user.setAuthorities(authorityService.getUserAuthority());
+
             userDetailRepository.save(user);
             emailService.sendMail(user);
 
-
             return RegistrationResponse.builder()
                     .code(200)
-                    .message("User created!")
+                    .message("Tạo tài khoản thành công!")
                     .build();
 
-
         } catch (Exception e) {
-            System.out.println(e.getMessage());
-            throw new ServerErrorException(e.getMessage(),e.getCause());
+            e.printStackTrace();
+            throw new ServerErrorException(e.getMessage(), e.getCause());
         }
     }
 
-    public void verifyUser(String userName) {
-        User user= userDetailRepository.findByEmail(userName);
-        user.setEnabled(true);
-        userDetailRepository.save(user);
+    public void verifyUser(String email) {
+        Optional<User> userOpt = userDetailRepository.findByEmail(email);
+        if (userOpt.isPresent()) {
+            User user = userOpt.get();
+            user.setEnabled(true);
+            userDetailRepository.save(user);
+        }
     }
 }

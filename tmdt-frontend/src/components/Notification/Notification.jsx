@@ -9,25 +9,37 @@ const NotificationPanel = ({ isOpen, onClose, notifications, onClearAll }) => {
                 <button className="close-btn" onClick={onClose}>×</button>
             </div>
 
-
             <div className="panel-content">
                 {notifications.length === 0 ? (
                     <p className="empty">Không có thông báo nào.</p>
                 ) : (
-                    notifications.map((item, index) => (
-                        <div key={index} className="notification-item">
-                            <p className="title">{item.title}</p>
-                            <p className="time">{item.time}</p>
+                    notifications.map((item) => (
+                        <div key={item.id} className="notification-item">
+                            <p>📦 Đơn #{item.id} - <span className="text-green-600">{item.status}</span></p>
+                            <p>🕒 {new Date(item.createdAt).toLocaleString()}</p>
+                            <p>✍️ Yêu cầu: {item.requestText}</p>
+                            <p>
+                                📎 File:{" "}
+                                <a
+                                    href={`http://localhost:8080${item.fileUrl}`}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="text-blue-600 underline"
+                                >
+                                    {item.filename}
+                                </a>
+                            </p>
                         </div>
                     ))
                 )}
             </div>
+
+
             {notifications.length > 0 && (
                 <div className="panel-actions">
                     <button className="clear-btn" onClick={onClearAll}>Xóa tất cả</button>
                 </div>
             )}
-
         </div>
     );
 };
