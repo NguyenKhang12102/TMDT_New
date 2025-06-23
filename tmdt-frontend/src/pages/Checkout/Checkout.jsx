@@ -2,9 +2,9 @@ import React, { useEffect, useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 // import { useNavigate } from "react-router-dom";
 
-import { setLoading } from "../../store/features/common";
-import { addAddressAPI, fetchUserDetails } from "../../api/UserInfo";
-import { selectCartItems } from "../../store/features/cart";
+import { setLoading } from "../../store/features/common.js";
+import { addAddressAPI, fetchUserDetails } from "../../api/UserInfo.js";
+import { selectCartItems } from "../../store/features/cart.js";
 
 import CODCheckoutForm from "./CODCheckoutForm.jsx";
 import "./Checkout.css";

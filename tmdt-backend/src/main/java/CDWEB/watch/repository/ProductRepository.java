@@ -1,4 +1,5 @@
 package CDWEB.watch.repository;
+import java.util.List;
 
 
 import CDWEB.watch.entity.Product;
@@ -12,6 +13,10 @@ import java.util.UUID;
 public interface ProductRepository extends JpaRepository<Product, UUID>, JpaSpecificationExecutor<Product> {
 
     Product findBySlug(String slug);
+
+
+    List<Product> findByCategoryType_Id(UUID categoryTypeId); // OK
+
 
 }
 

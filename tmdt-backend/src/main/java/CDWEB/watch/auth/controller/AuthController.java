@@ -19,7 +19,6 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.web.bind.annotation.*;
 
@@ -53,12 +52,12 @@ public class AuthController {
             Authentication authenticationResponse = this.authenticationManager.authenticate(authentication);
 
             if(authenticationResponse.isAuthenticated()){
-                UserDetails userDetails = (UserDetails) authenticationResponse.getPrincipal();
-                if(!((User) userDetails).isEnabled()) {
+                User user= (User) authenticationResponse.getPrincipal();
+                if(!user.isEnabled()) {
                     return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
                 }
 
-                String token =jwtTokenHelper.generateToken(userDetails);
+                String token =jwtTokenHelper.generateToken(user.getEmail());
                 UserToken userToken= UserToken.builder().token(token).build();
                 return new ResponseEntity<>(userToken,HttpStatus.OK);
             }

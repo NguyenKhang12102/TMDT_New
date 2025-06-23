@@ -1,9 +1,9 @@
 import React, { useCallback, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { selectCartItems } from '../../store/features/cart';
-import { createOrderRequest } from '../../utils/order-util';
-import { placeOrderAPI } from '../../api/order';
-import { setLoading } from '../../store/features/common';
+import { selectCartItems } from '../../store/features/cart.js';
+import { createOrderRequest } from '../../utils/order-util.js';
+import { placeOrderAPI } from '../../api/order.js';
+import { setLoading } from '../../store/features/common.js';
 import { useNavigate } from 'react-router-dom';
 import { clearCart } from '../../store/actions/cartAction.js';
 import { saveAddress } from '../../store/features/user.js';

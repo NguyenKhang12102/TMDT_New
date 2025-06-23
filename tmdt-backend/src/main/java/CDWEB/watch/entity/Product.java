@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -18,7 +19,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Product {
+public class Product implements Serializable {
 
     @Id
     @GeneratedValue
@@ -30,9 +31,9 @@ public class Product {
     @Column
     private String description;
 
-
     @Column(nullable = false)
     private BigDecimal price;
+
     @Column(nullable = false)
     private String brand;
 
@@ -45,42 +46,47 @@ public class Product {
     @Column(nullable = false, unique = true)
     private String slug;
 
+    @Temporal(TemporalType.TIMESTAMP)
     @Column(nullable = false, updatable = false)
-    @Temporal(TemporalType.TIMESTAMP)
-    private java.util.Date createdAt;
+    private Date createdAt;
 
-    @Column(nullable = false)
     @Temporal(TemporalType.TIMESTAMP)
-    private java.util.Date updatedAt;
+    @Column(nullable = false)
+    private Date updatedAt;
 
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ProductVariant> productVariants;
+
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Resources> resources;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "category_type_id", nullable = false)
+    @JsonIgnore
+    private CategoryType categoryType;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id", nullable = false)
     @JsonIgnore
     private Category category;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "categoryType_id",nullable = false)
-    @JsonIgnore
-    private CategoryType categoryType;
 
-    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Resources> resources;
+
+
+
+    // Truy cập category_type_id cho DTO hoặc logic khác
+    public UUID getCategoryTypeId() {
+        return categoryType != null ? categoryType.getId() : null;
+    }
 
     @PrePersist
     protected void onCreate() {
-        createdAt = new java.util.Date();
+        createdAt = new Date();
         updatedAt = createdAt;
     }
 
     @PreUpdate
     protected void onUpdate() {
-        updatedAt = new java.util.Date();
-    }
-
-    public UUID getCategoryTypeId() {
-        return categoryType != null ? categoryType.getId() : null;
+        updatedAt = new Date();
     }
 }

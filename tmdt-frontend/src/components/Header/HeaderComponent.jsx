@@ -11,17 +11,17 @@ import {
 import { NavLink, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import NotificationPanel from '../Notification/Notification.jsx';
-import { fetchCategories } from '../../api/fetchCategories.js';
-import { loadCategories } from '../../store/features/category';
-import { setLoading } from '../../store/features/common';
-import { logout } from '../../store/features/authSlice';
-import { logoutUser } from '../../store/features/user';
+import { fetchCategories } from  '../../api/fetchCategories.js';
+import { loadCategories } from '../../store/features/category.js';
+import { setLoading } from '../../store/features/common.js';
+import { logout } from '../../store/features/authSlice.jsx';
+import { logoutUser } from '../../store/features/user.js';
 import staticCategories from '../../data/staticCategories.js';
 import {countCartItems} from "../../store/features/cart.js";
 import Cart from '../../pages/Cart/Cart.jsx';
 import {selectShowCart, setShowCart} from "../../store/features/uiSlice.jsx";
-import "../../components/Header/headerComponent.css";
-
+import "./headerComponent.css";
+import logo from "../../assets/logo/logo.png";
 
 const HeaderComponent = () => {
     const dispatch = useDispatch();
@@ -89,11 +89,14 @@ const HeaderComponent = () => {
             >
                 <div className="relative flex items-center justify-between w-full px-6">
                     <NavLink to="/" className="flex items-center gap-2 text-2xl font-bold text-black tracking-widest">
-                        <img
-                            src="/logo.jpg"
-                            alt="Logo"
-                            className="h-14 w-auto object-contain"
-                        />
+                            <img
+                                src={logo}
+                                alt="Triple D Logo"
+                                height={50}
+                                width={40}
+                                className="ml-[14px] -mb-[5px]"
+                            />
+                            <p className="">Triple D</p>
                     </NavLink>
 
                     <nav
@@ -103,16 +106,6 @@ const HeaderComponent = () => {
                             chủ</NavLink>
                         <NavLink to="/products" className="text-gray-500 hover:text-black">Sản phẩm</NavLink>
                         <NavLink to="/custom" className="text-gray-500 hover:text-black">Custom</NavLink>
-
-                        {categories?.map((cat, idx) => (
-                            <NavLink
-                                key={cat.code + idx}
-                                to={`/${cat.code.toLowerCase()}`}
-                                className={({isActive}) => isActive ? 'text-black' : 'text-gray-500 hover:text-black'}>
-                                {cat.name}
-                            </NavLink>
-                        ))}
-
                         <NavLink to="/aboutus" className="text-gray-500 hover:text-black">Giới thiệu</NavLink>
 
                         <NavLink to="/contact" className="text-gray-500 hover:text-black">Liên hệ</NavLink>
@@ -161,8 +154,6 @@ const HeaderComponent = () => {
                     <div className="md:hidden px-6 pb-4 pt-2 space-y-2 bg-white border-t border-gray-200">
                         <NavLink to="/" className="block text-gray-800 font-medium" onClick={() => setShowMenu(false)}>Trang
                             chủ</NavLink>
-                        <NavLink to="/products" className="block text-gray-800 font-medium" onClick={() => setShowMenu(false)}>Sản phẩm</NavLink>
-                        <NavLink to="/custom" className="block text-gray-800 font-medium" onClick={() => setShowMenu(false)}>Custom</NavLink>
                         {categories?.map((cat, idx) => (
                             <NavLink key={cat.code + idx} to={`/${cat.code.toLowerCase()}`}
                                      className="block text-gray-800 font-medium" onClick={() => setShowMenu(false)}>

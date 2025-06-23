@@ -1,8 +1,8 @@
 import React, { useState, useCallback } from 'react';
 import { NavLink } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
-import { registerAPI } from '../../api/authentication';
-import { setLoading } from '../../store/features/common';
+import { registerAPI } from '../../api/authentication.js';
+import { setLoading } from '../../store/features/common.js';
 import VerifyCode from './VerifyCode.jsx';
 
 const RegisterPage = () => {
