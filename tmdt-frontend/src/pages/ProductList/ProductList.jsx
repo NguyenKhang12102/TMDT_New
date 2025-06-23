@@ -30,8 +30,8 @@ const ProductListPage = ({ categoryType, useStaticData = true }) => {
     const productsPerPage = 12;
 
     const filterConfigs = [
-        { key: "brands", title: "Hãng", options: ["Casio", "Seiko", "Citizen", "Rolex"] },
-        { key: "types", title: "Loại đồng hồ", options: ["Dây cao su", "Dây kim loại", "Dây da"] },
+        { key: "brands", title: "danh mục", options: ["Phụ kiện & Link kiện", "Trang trí", "Quà tặng", "Mô hình","Chậu cây"] },
+        // { key: "types", title: "Loại đồng hồ", options: ["Dây cao su", "Dây kim loại", "Dây da"] },
     ];
 
     const category = useMemo(() => {

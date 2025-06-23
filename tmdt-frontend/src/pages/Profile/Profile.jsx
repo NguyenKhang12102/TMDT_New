@@ -104,7 +104,7 @@ const ProfilePage = () => {
                                     <div className="flex flex-col gap-2">
                                         <input
                                             type="text"
-                                            placeholder="Số nhà, tên đường"
+                                            placeholder="Số nhà, tên đường, phường"
                                             className="border p-2 rounded"
                                             value={newAddress.street}
                                             onChange={(e) => setNewAddress({ ...newAddress, street: e.target.value })}
@@ -118,7 +118,7 @@ const ProfilePage = () => {
                                         />
                                         <input
                                             type="text"
-                                            placeholder="Tỉnh/Thành"
+                                            placeholder="Quốc gia"
                                             className="border p-2 rounded"
                                             value={newAddress.state}
                                             onChange={(e) => setNewAddress({ ...newAddress, state: e.target.value })}
