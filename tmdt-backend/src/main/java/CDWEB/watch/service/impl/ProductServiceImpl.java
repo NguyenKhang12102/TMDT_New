@@ -3,9 +3,11 @@ package CDWEB.watch.service.impl;
 
 import CDWEB.watch.dto.ProductDto;
 import CDWEB.watch.entity.Product;
+import CDWEB.watch.entity.CategoryType;
 import CDWEB.watch.exception.ResourceNotFoundEx;
 import CDWEB.watch.mapper.ProductMapper;
 import CDWEB.watch.repository.ProductRepository;
+import CDWEB.watch.repository.CategoryTypeRepository;
 import CDWEB.watch.service.CategoryService;
 import CDWEB.watch.service.ProductService;
 import CDWEB.watch.specification.ProductSpecification;
@@ -29,13 +31,29 @@ public class ProductServiceImpl implements ProductService {
     @Autowired
     private ProductMapper productMapper;
 
+    @Autowired
+    private CategoryTypeRepository categoryTypeRepository;
+
+
     @Override
     public Product addProduct(ProductDto productDto) {
-
         Product product = productMapper.mapToProductEntity(productDto);
+
+        // Gán CategoryType
+        if (productDto.getCategoryTypeId() != null) {
+            CategoryType categoryType = categoryTypeRepository.findById(productDto.getCategoryTypeId())
+                    .orElseThrow(() -> new ResourceNotFoundEx("CategoryType not found"));
+            product.setCategoryType(categoryType);
+
+            // Gán Category từ CategoryType
+            product.setCategory(categoryType.getCategory());
+        } else {
+            throw new IllegalArgumentException("CategoryTypeId is required");
+        }
 
         return productRepository.save(product);
     }
+
 
     @Override
     public List<ProductDto> getAllProducts(UUID categoryId, UUID typeId) {
@@ -80,10 +98,30 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public Product updateProduct(ProductDto productDto, UUID id) {
-        Product product= productRepository.findById(id).orElseThrow(()-> new ResourceNotFoundEx("Product Not Found!"));
-        productDto.setId(product.getId());
-        return productRepository.save(productMapper.mapToProductEntity(productDto));
+        // Tìm sản phẩm hiện tại
+        Product existingProduct = productRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundEx("Product Not Found!"));
+
+        // Map DTO → Entity
+        Product updatedProduct = productMapper.mapToProductEntity(productDto);
+
+        // ⚠️ Gán lại ID vì Hibernate cần đúng ID mới cập nhật
+        updatedProduct.setId(existingProduct.getId());
+
+        // ⚠️ Gán lại category và categoryType nếu cần
+        if (productDto.getCategoryTypeId() != null) {
+            CategoryType categoryType = categoryTypeRepository.findById(productDto.getCategoryTypeId())
+                    .orElseThrow(() -> new ResourceNotFoundEx("CategoryType not found"));
+
+            updatedProduct.setCategoryType(categoryType);
+            updatedProduct.setCategory(categoryType.getCategory()); // ⚠️ KHÔNG ĐƯỢC THIẾU
+        } else {
+            throw new IllegalArgumentException("CategoryTypeId is required");
+        }
+
+        return productRepository.save(updatedProduct);
     }
+
 
     @Override
     public Product fetchProductById(UUID id) throws Exception {

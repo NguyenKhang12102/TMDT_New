@@ -1,6 +1,7 @@
-import React from 'react'
-import { Admin, fetchUtils, Resource, withLifecycleCallbacks } from 'react-admin'
+import React from 'react';
+import { Admin, fetchUtils, Resource, withLifecycleCallbacks } from 'react-admin';
 import simpleRestProvider from "ra-data-simple-rest";
+
 import ProductList from './ProductList.jsx';
 import EditProduct from './EditProduct';
 import CreateProduct from './CreateProduct';
@@ -12,15 +13,41 @@ import OrderShow from "./Order/OrderShow.jsx";
 import UserList from './User/UserList';
 import UserShow from './User/UserShow';
 
+const API_BASE_URL = "http://localhost:8080";
+
 const httpClient = (url, options = {}) => {
     const token = localStorage.getItem('authToken');
-    if (!options.headers) options.headers = new Headers();
+    if (!options.headers) options.headers = new Headers({ Accept: 'application/json' });
     options.headers.set('Authorization', `Bearer ${token}`);
     return fetchUtils.fetchJson(url, options);
-}
+};
 
-const dataProvider = withLifecycleCallbacks(
-    simpleRestProvider('http://localhost:8080/api', httpClient),
+const baseProvider = simpleRestProvider(`${API_BASE_URL}/api`, httpClient);
+
+// Gói lại provider để override riêng getList của 2 resource
+const dataProvider = {
+    ...baseProvider,
+    getList: (resource, params) => {
+        if (resource === 'category-types') {
+            return httpClient(`${API_BASE_URL}/api/category-types`).then(({ json }) => ({
+                data: json.map(item => ({ id: item.id, name: item.name })),
+                total: json.length
+            }));
+        }
+        if (resource === 'categories') {
+            return httpClient(`${API_BASE_URL}/api/category`).then(({ json }) => ({
+                data: json.map(item => ({ id: item.id, name: item.name })),
+                total: json.length
+            }));
+        }
+
+        return baseProvider.getList(resource, params);
+    },
+};
+
+// Thêm upload file
+const wrappedProvider = withLifecycleCallbacks(
+    dataProvider,
     [
         {
             resource: "products",
@@ -28,7 +55,6 @@ const dataProvider = withLifecycleCallbacks(
                 let requestBody = { ...params };
                 let productResList = params?.productResources ?? [];
 
-                // Upload thumbnail nếu có file mới
                 if (params?.thumbnail?.rawFile) {
                     const fileName = params.thumbnail.rawFile.name.replaceAll(' ', '-');
                     const formData = new FormData();
@@ -38,11 +64,9 @@ const dataProvider = withLifecycleCallbacks(
                     if (!res || !res.url) throw new Error("Upload thumbnail thất bại");
                     requestBody.thumbnail = res.url;
                 } else if (typeof params.thumbnail === "string") {
-                    // Nếu là link cũ, giữ nguyên
                     requestBody.thumbnail = params.thumbnail;
                 }
 
-                // Upload từng productResource nếu có file mới
                 const newProductResList = await Promise.all(
                     productResList.map(async (productResource) => {
                         if (productResource?.url?.rawFile) {
@@ -54,17 +78,16 @@ const dataProvider = withLifecycleCallbacks(
                             if (!res || !res.url) throw new Error("Upload resource thất bại");
                             return { ...productResource, url: res.url };
                         } else if (typeof productResource.url === "string") {
-                            return productResource; // giữ nguyên link cũ
+                            return productResource;
                         }
                         return productResource;
                     })
                 );
 
-                const request = {
+                return {
                     ...requestBody,
                     productResources: newProductResList
                 };
-                return request;
             }
         }
     ]
@@ -72,15 +95,13 @@ const dataProvider = withLifecycleCallbacks(
 
 export const AdminPanel = () => {
     return (
-        <Admin dataProvider={dataProvider} basename='/admin'>
+        <Admin dataProvider={wrappedProvider} basename='/admin'>
             <Resource name='products' list={ProductList} edit={EditProduct} create={CreateProduct} />
             <Resource name='category' list={CategoryList} edit={CategoryEdit} />
-            <Resource
-                name='order'
-                list={OrderList}
-                show={OrderShow}
-            />
+            <Resource name="category-types" />
+            <Resource name="categories" />
+            <Resource name='order' list={OrderList} show={OrderShow} />
             <Resource name='user' list={UserList} show={UserShow} />
         </Admin>
-    )
-}
+    );
+};
