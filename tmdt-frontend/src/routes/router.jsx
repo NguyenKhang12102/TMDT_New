@@ -19,6 +19,7 @@ import Profile from "../pages/Profile/Profile.jsx";
 import OAuth2LoginCallback from "../pages/OAuth2LoginCallback.jsx";
 import OrderConfirmed from "../pages/OrderConfirmed/OrderConfirmed.jsx";
 import {AdminPanel} from "../pages/Admin/AdminPanel.jsx";
+import ChangePasswordPage from "../pages/ChangePassword/ChangePasswordPage.jsx";
 
 const router = createBrowserRouter([
     {
@@ -46,6 +47,7 @@ const router = createBrowserRouter([
             { path: "/profile", element: <Profile /> },
             { path: "/oauth2/callback", element: <OAuth2LoginCallback /> },
             { path: "/orderConfirmed", element: <OrderConfirmed /> },
+            { path: "/change-password", element: <ChangePasswordPage /> },
 
 
         ],
