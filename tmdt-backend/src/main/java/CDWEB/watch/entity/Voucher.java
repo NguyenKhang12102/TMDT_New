@@ -31,6 +31,7 @@ public class Voucher {
 
     @Column(nullable = false)
     private boolean used = false;
+    
 
     @Column(name = "created_at")
     private LocalDateTime createdAt;
