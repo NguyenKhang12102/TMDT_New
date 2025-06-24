@@ -5,6 +5,7 @@ package CDWEB.watch.controller;
 
 import CDWEB.watch.dto.ProductDto;
 import CDWEB.watch.entity.Product;
+import CDWEB.watch.repository.ProductRepository;
 import CDWEB.watch.service.ProductService;
 import io.micrometer.common.util.StringUtils;
 import jakarta.servlet.http.HttpServletResponse;
@@ -24,6 +25,9 @@ import java.util.UUID;
 public class ProductController {
 
     private ProductService productService;
+
+    @Autowired
+    private ProductRepository productRepository;
 
     @Autowired
     public ProductController(ProductService productService){
@@ -81,8 +85,25 @@ public class ProductController {
         return ResponseEntity.ok(productList);
     }
 
+    @GetMapping("/best-selling")
+    public ResponseEntity<List<ProductDto>> getBestSellingProducts(
+            @RequestParam(defaultValue = "10") int limit) {
+        return ResponseEntity.ok(productService.getBestSellingProducts(limit));
+    }
+    @GetMapping("/newest")
+    public ResponseEntity<List<ProductDto>> getNewestProducts(
+            @RequestParam(defaultValue = "10") int limit) {
+        return ResponseEntity.ok(productService.getNewestProducts(limit));
+    }
+    @GetMapping("/most-viewed")
+    public ResponseEntity<List<ProductDto>> getMostViewedProducts(
+            @RequestParam(defaultValue = "10") int limit) {
+        return ResponseEntity.ok(productService.getMostViewedProducts(limit));
+    }
+
+    }
 
 
 
 
-}
+

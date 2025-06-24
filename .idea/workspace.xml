@@ -27,12 +27,12 @@
     &quot;assignee&quot;: &quot;dunghoang16803&quot;
   }
 }</component>
-  <component name="GithubPullRequestsUISettings">{
-  &quot;selectedUrlAndAccountId&quot;: {
-    &quot;url&quot;: &quot;https://github.com/DongChis/Website-DongHo.git&quot;,
-    &quot;accountId&quot;: &quot;fd89e2b1-9f35-45c2-98fc-6e88b089ad61&quot;
+  <component name="GithubPullRequestsUISettings"><![CDATA[{
+  "selectedUrlAndAccountId": {
+    "url": "https://github.com/NguyenKhang12102/TMDT_New.git",
+    "accountId": "a1d22c4e-5cff-4f67-b28d-b69d8ec4adff"
   }
-}</component>
+}]]></component>
   <component name="ProjectColorInfo">{
   &quot;customColor&quot;: &quot;&quot;,
   &quot;associatedIndex&quot;: 5
@@ -49,15 +49,16 @@
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.git.unshallow": "true",
     "WebServerToolWindowFactoryState": "false",
-    "git-widget-placeholder": "HoangAnhDung",
+    "git-widget-placeholder": "huy",
     "ignore.virus.scanning.warn.message": "true",
-    "last_opened_file_path": "D:/TaiLieuHocTap/Thương mại điện tử/Website-DongHo/watch-backend",
+    "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "D:/intelliji_pj/TMDT_New/tmdt-backend",
     "list.type.of.created.stylesheet": "CSS",
     "node.js.detected.package.eslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
     "node.js.selected.package.tslint": "(autodetect)",
     "nodejs_package_manager_path": "npm",
-    "project.structure.last.edited": "Problems",
+    "project.structure.last.edited": "Project",
     "project.structure.proportion": "0.0",
     "project.structure.side.proportion": "0.2",
     "ts.external.directory.path": "E:\\WebStorm 2024.3\\plugins\\javascript-plugin\\jsLanguageServicesImpl\\external",
@@ -72,8 +73,8 @@
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
-        <option value="bundled-jdk-9823dce3aa75-fbdcb00ec9e3-intellij.indexing.shared.core-IU-251.23774.435" />
-        <option value="bundled-js-predefined-d6986cc7102b-f27c65a3e318-JavaScript-IU-251.23774.435" />
+        <option value="bundled-jdk-9823dce3aa75-28b599e66164-intellij.indexing.shared.core-IU-242.23339.11" />
+        <option value="bundled-js-predefined-d6986cc7102b-5c90d61e3bab-JavaScript-IU-242.23339.11" />
       </set>
     </attachedChunks>
   </component>
@@ -94,6 +95,7 @@
       <workItem from="1747743981399" duration="21000" />
       <workItem from="1747744053539" duration="1325000" />
       <workItem from="1750496957381" duration="196000" />
+      <workItem from="1750699294650" duration="155000" />
     </task>
     <servers />
   </component>

@@ -29,32 +29,38 @@ import java.util.List;
 public class WebSecurityConfig {
 
     @Autowired
-    private UserDetailsService userDetailsService;
-
-
-
-    @Autowired
     private JWTTokenHelper jwtTokenHelper;
 
     private static final String[] publicApis= {
             "/api/auth/**"
-    };;
+    };
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain securityFilterChain(HttpSecurity http, UserDetailsService userDetailsService) throws Exception {
         http
                 .cors(cors -> {})
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
-                        // Cho phép truy cập tài liệu API swagger
-                        .requestMatchers("/v3/api-docs/**", "/swagger-ui/**","/api/order-custom/upload","/api/order-custom/**").permitAll()
-
-
-                        .requestMatchers(HttpMethod.GET, "/api/products", "/api/category", "/api/order","api/category-types","/api/products/by-category-type/**").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/api/products/**", "/api/category/**").permitAll()
+                        .requestMatchers("/v3/api-docs/**", "/swagger-ui/**").permitAll()
+                        .requestMatchers(HttpMethod.GET,
+                                "/api/products",
+                                "/api/products/**", // <-- Thêm dòng này
+                                "/api/products/best-selling",
+                                "/api/products/newest",
+                                "/api/products/most-viewed",
+                                "/api/category",
+                                "/api/order",
+                                "/api/category-types",
+                                "/api/products/by-category-type/**"
+                        ).permitAll()
+                        .requestMatchers(HttpMethod.POST,
+                                "/api/user/forgot-password",
+                                "/api/user/reset-password",
+                                "/api/products/**",
+                                "/api/category/**"
+                        ).permitAll()
                         .requestMatchers(HttpMethod.PUT, "/api/products/**", "/api/category/**").permitAll()
                         .requestMatchers("/api/order/**").permitAll()
-
                         .anyRequest().authenticated()
                 )
                 .oauth2Login(oauth2 -> oauth2
@@ -78,12 +84,11 @@ public class WebSecurityConfig {
                             }
                         })
                 )
+                .addFilterBefore(new JWTAuthenticationFilter(jwtTokenHelper, userDetailsService),
+                        UsernamePasswordAuthenticationFilter.class);
 
-
-                .addFilterBefore(new JWTAuthenticationFilter(jwtTokenHelper, userDetailsService), UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
-
 
     @Bean
     public WebSecurityCustomizer webSecurityCustomizer(){
@@ -91,13 +96,12 @@ public class WebSecurityConfig {
     }
 
     @Bean
-    public AuthenticationManager authenticationManager(){
+    public AuthenticationManager authenticationManager(UserDetailsService userDetailsService){
         DaoAuthenticationProvider daoAuthenticationProvider= new DaoAuthenticationProvider();
         daoAuthenticationProvider.setUserDetailsService(userDetailsService);
         daoAuthenticationProvider.setPasswordEncoder(passwordEncoder());
 
         return new ProviderManager(daoAuthenticationProvider);
-
     }
 
     @Bean
@@ -105,28 +109,17 @@ public class WebSecurityConfig {
         CorsConfiguration config = new CorsConfiguration();
         config.setAllowedOrigins(List.of("http://localhost:3000"));
         config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
-        config.setAllowedHeaders(List.of(
-                "*",                      // hoặc liệt kê cụ thể bên dưới
-                "Authorization",
-                "Content-Type",
-                "X-Requested-With"
-        ));
+        config.setAllowedHeaders(List.of("*", "Authorization", "Content-Type", "X-Requested-With"));
         config.setExposedHeaders(List.of("Content-Range", "Authorization"));
-        config.setAllowCredentials(true); // Cho phép gửi cookie/token
+        config.setAllowCredentials(true);
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", config);
         return source;
     }
 
-
-
-
-
     @Bean
     public PasswordEncoder passwordEncoder(){
         return PasswordEncoderFactories.createDelegatingPasswordEncoder();
     }
-
-
 }

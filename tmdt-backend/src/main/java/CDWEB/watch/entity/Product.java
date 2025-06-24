@@ -70,6 +70,8 @@ public class Product implements Serializable {
     @JsonIgnore
     private Category category;
 
+    @Column(name = "view_count")
+    private Long viewCount = 0L;
 
 
 

@@ -3,6 +3,7 @@ package CDWEB.watch.auth.services;
 import CDWEB.watch.auth.entities.User;
 import CDWEB.watch.auth.repositories.UserDetailRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 
@@ -18,8 +19,12 @@ public class OAuth2Service {
     private AuthorityService authorityService;
 
     public User getUser(String userName) {
-        return userDetailRepository.findByEmail(userName).orElse(null);
+
+        return userDetailRepository.findByEmail(userName)
+                .orElseThrow(() -> new UsernameNotFoundException("Không tìm thấy người dùng: " + userName));
+
     }
+
 
     public User createUser(OAuth2User oAuth2User, String provider) {
         String firstName = oAuth2User.getAttribute("family_name");

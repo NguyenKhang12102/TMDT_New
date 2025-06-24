@@ -6,6 +6,7 @@ import CDWEB.watch.entity.Product;
 import CDWEB.watch.entity.CategoryType;
 import CDWEB.watch.exception.ResourceNotFoundEx;
 import CDWEB.watch.mapper.ProductMapper;
+import CDWEB.watch.repository.OrderItemRepository;
 import CDWEB.watch.repository.ProductRepository;
 import CDWEB.watch.repository.CategoryTypeRepository;
 import CDWEB.watch.service.CategoryService;
@@ -13,6 +14,8 @@ import CDWEB.watch.service.ProductService;
 import CDWEB.watch.specification.ProductSpecification;
 import org.apache.coyote.BadRequestException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
@@ -33,6 +36,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Autowired
     private CategoryTypeRepository categoryTypeRepository;
+
 
 
     @Override
@@ -73,10 +77,13 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public ProductDto getProductBySlug(String slug) {
-        Product product= productRepository.findBySlug(slug);
-        if(null == product){
-            throw new ResourceNotFoundEx("Product Not Found!");
-        }
+        Product product = productRepository.findBySlug(slug)
+                .orElseThrow(() -> new ResourceNotFoundEx("Product Not Found!"));
+
+        Long viewCount = product.getViewCount() == null ? 0L : product.getViewCount();
+        product.setViewCount(viewCount + 1);
+        productRepository.save(product);
+
         ProductDto productDto = productMapper.mapProductToDto(product);
         productDto.setCategoryId(product.getCategoryType().getId());
         productDto.setCategoryTypeId(product.getCategoryType().getId());
@@ -84,6 +91,8 @@ public class ProductServiceImpl implements ProductService {
         productDto.setProductResources(productMapper.mapProductResourcesListDto(product.getResources()));
         return productDto;
     }
+
+
 
     @Override
     public ProductDto getProductById(UUID id) {
@@ -140,6 +149,41 @@ public class ProductServiceImpl implements ProductService {
                 ProductSpecification.hasCategoryTypeId(typeId)
         );
         return productMapper.getProductDtos(products);
+    }
+
+    @Override
+    public List<ProductDto> getBestSellingProducts(int limit) {
+        Pageable pageable = PageRequest.of(0, limit);
+        List<Object[]> result = productRepository.findBestSellingProducts(pageable);
+
+        return result.stream()
+                .map(row -> {
+                    Product product = (Product) row[0];
+                    Long totalSold = (Long) row[1];
+                    ProductDto dto = productMapper.mapProductToDto(product); // ✅ Dùng mapper
+                    dto.setTotalSold(totalSold);
+                    dto.setTotalSold(totalSold);
+                    return dto;
+                })
+                .toList();
+    }
+    @Override
+    public List<ProductDto> getNewestProducts(int limit) {
+        Pageable pageable = PageRequest.of(0, limit);
+        List<Product> products = productRepository.findNewestProducts(pageable);
+        return products.stream()
+                .map(productMapper::mapProductToDto)
+                .toList();
+    }
+
+
+    @Override
+    public List<ProductDto> getMostViewedProducts(int limit) {
+        Pageable pageable = PageRequest.of(0, limit);
+        List<Product> products = productRepository.findMostViewedProducts(pageable);
+        return products.stream()
+                .map(productMapper::mapProductToDto)
+                .toList();
     }
 
 

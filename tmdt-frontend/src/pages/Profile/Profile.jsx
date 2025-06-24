@@ -88,47 +88,59 @@ const ProfilePage = () => {
     const hasAvatar = Boolean(user?.avatarUrl);
 
     return (
-        <div className="w-full max-w-4xl mx-auto mt-12 p-8 bg-gradient-to-br from-white to-blue-50 shadow-xl rounded-2xl font-sans min-h-[550px] mb-12">
+        <div className="max-w-4xl mx-auto mt-12 p-8 bg-white rounded-3xl shadow-lg font-sans min-h-[550px] mb-12">
 
+            {/* Link admin nếu admin */}
             {isUserAdmin && (
-                <div className="text-right">
-                    <Link to={"/admin"} className="text-lg text-blue-900 underline">Manage Admin</Link>
+                <div className="text-right mb-6">
+                    <Link to="/admin" className="text-blue-700 underline font-medium hover:text-blue-900">
+                        Quản lý Admin
+                    </Link>
                 </div>
             )}
 
-            <div className="flex flex-col lg:flex-row gap-8">
+            <div className="flex flex-col lg:flex-row gap-10 items-center lg:items-start">
+                {/* Avatar */}
                 {hasAvatar && (
-                    <div className="flex justify-center lg:justify-start">
+                    <div className="flex-shrink-0">
                         <img
                             src={user.avatarUrl}
                             alt="Avatar"
-                            className="rounded-full w-28 h-28 border-4 border-blue-600 shadow-md object-cover"
+                            className="rounded-full w-32 h-32 border-4 border-blue-500 shadow-md object-cover"
                         />
                     </div>
                 )}
+
+                {/* Thông tin cá nhân */}
                 <div className="flex-1">
-                    <h2 className="text-3xl font-bold text-blue-800 mb-10 text-center lg:text-left pb-4">
+                    <h2 className="text-3xl font-bold text-blue-800 mb-8 border-b pb-3">
                         Thông Tin Cá Nhân
                     </h2>
 
                     {user && user.email ? (
-                        <div className="flex flex-col gap-8 text-gray-800 text-base">
-                            <div className="flex justify-between border-b pb-3">
+                        <div className="space-y-6 text-gray-800 text-base">
+                            <div className="flex justify-between">
                                 <span className="font-semibold w-1/3">Họ tên:</span>
-                                <span className="text-right flex-1">{(user.lastName ?? '') + ' ' + (user.firstName ?? '') || 'Chưa cập nhật'}</span>
+                                <span
+                                    className="flex-1 text-right">{(user.lastName ?? '') + ' ' + (user.firstName ?? '') || 'Chưa cập nhật'}</span>
                             </div>
-                            <div className="flex justify-between border-b pb-3">
-                                <span className="font-semibold w-1/3">Email:</span>
-                                <span className="break-all text-right flex-1">{user.email}</span>
-                            </div>
-                            {!user.phoneNumber && (
-                                <div className="flex justify-between border-b pb-3 mt-4">
-                                    <span className="font-semibold w-1/3">Số điện thoại:</span>
-                                    <span className="text-right flex-1 text-gray-500 italic">Chưa cập nhật</span>
-                                </div>
-                            )}
 
-                            <div className="border-b pb-3">
+                            <div className="flex justify-between">
+                                <span className="font-semibold w-1/3">Email:</span>
+                                <span className="flex-1 text-right break-words">{user.email}</span>
+                            </div>
+
+                            <div className="flex justify-between">
+                                <span className="font-semibold w-1/3">Số điện thoại:</span>
+                                {user.phoneNumber ? (
+                                    <span className="flex-1 text-right">{user.phoneNumber}</span>
+                                ) : (
+                                    <span className="flex-1 text-right text-gray-400 italic">Chưa cập nhật</span>
+                                )}
+                            </div>
+
+                            {/* Địa chỉ */}
+                            <div>
                                 <div className="flex justify-between items-center mb-2">
                                     <span className="font-semibold">Địa chỉ:</span>
                                     <button
@@ -140,92 +152,97 @@ const ProfilePage = () => {
                                 </div>
 
                                 {isEditing ? (
-                                    <div className="flex flex-col gap-2">
+                                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                         <input
                                             type="text"
                                             placeholder="Số nhà, tên đường, phường"
-                                            className="border p-2 rounded"
+                                            className="border rounded px-3 py-2"
                                             value={newAddress.street}
-                                            onChange={(e) => setNewAddress({ ...newAddress, street: e.target.value })}
+                                            onChange={(e) => setNewAddress({...newAddress, street: e.target.value})}
                                         />
                                         <input
                                             type="text"
                                             placeholder="Thành phố"
-                                            className="border p-2 rounded"
+                                            className="border rounded px-3 py-2"
                                             value={newAddress.city}
-                                            onChange={(e) => setNewAddress({ ...newAddress, city: e.target.value })}
+                                            onChange={(e) => setNewAddress({...newAddress, city: e.target.value})}
                                         />
                                         <input
                                             type="text"
                                             placeholder="Quốc gia"
-                                            className="border p-2 rounded"
+                                            className="border rounded px-3 py-2"
                                             value={newAddress.state}
-                                            onChange={(e) => setNewAddress({ ...newAddress, state: e.target.value })}
+                                            onChange={(e) => setNewAddress({...newAddress, state: e.target.value})}
                                         />
                                         <input
                                             type="text"
                                             placeholder="Số điện thoại"
-                                            className="border p-2 rounded"
+                                            className="border rounded px-3 py-2"
                                             value={newAddress.phoneNumber}
-                                            onChange={(e) => setNewAddress({ ...newAddress, phoneNumber: e.target.value })}
+                                            onChange={(e) => setNewAddress({
+                                                ...newAddress,
+                                                phoneNumber: e.target.value
+                                            })}
                                         />
                                         <button
-                                            className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+                                            className="col-span-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700 transition"
                                             onClick={handleAddAddress}
                                         >
                                             Lưu địa chỉ
                                         </button>
                                     </div>
                                 ) : latestAddress ? (
-                                    <ul className="list-disc ml-5 text-gray-700">
-                                        <li className="flex justify-between items-start gap-4 mb-2">
-                                            <div>{latestAddress.street}, {latestAddress.city}, {latestAddress.state}</div>
-                                        </li>
-                                    </ul>
+                                    <p className="text-gray-700 ml-4">{latestAddress.street}, {latestAddress.city}, {latestAddress.state}</p>
                                 ) : (
-                                    <span className="text-gray-500">Chưa có địa chỉ nào</span>
+                                    <p className="text-gray-400 italic ml-4">Chưa có địa chỉ nào</p>
                                 )}
                             </div>
 
-                            <div className="flex justify-between border-b pb-3">
+                            <div className="flex justify-between">
                                 <span className="font-semibold w-1/3">Điểm thưởng:</span>
-                                <span className="text-right flex-1 text-blue-600 font-bold">{user?.points ?? 0} điểm</span>
+                                <span
+                                    className="flex-1 text-right text-blue-600 font-bold">{user?.points ?? 0} điểm</span>
                             </div>
 
+                            {/* Voucher đổi điểm */}
                             {user?.points >= 500 && (
-                                <div className="mt-6">
-                                    <p className="text-sm text-gray-600 mb-2">Bạn có thể đổi điểm để nhận voucher:</p>
-                                    <button
-                                        onClick={() => handleRedeem(500)}
-                                        className="bg-green-500 text-white py-2 px-4 rounded mr-3 hover:bg-green-600"
-                                        disabled={user.points < 500}
-                                    >
-                                        Đổi 500 điểm lấy voucher 10%
-                                    </button>
-                                    <button
-                                        onClick={() => handleRedeem(1000)}
-                                        className="bg-purple-500 text-white py-2 px-4 rounded hover:bg-purple-600"
-                                        disabled={user.points < 1000}
-                                    >
-                                        Đổi 1000 điểm lấy voucher 20%
-                                    </button>
+                                <div className="space-y-3 pt-4 border-t">
+                                    <p className="text-gray-600 text-sm">Bạn có thể đổi điểm để nhận voucher:</p>
+                                    <div className="flex flex-wrap gap-4">
+                                        <button
+                                            onClick={() => handleRedeem(500)}
+                                            disabled={user.points < 500}
+                                            className="bg-green-500 text-white py-2 px-4 rounded hover:bg-green-600 disabled:opacity-50 transition"
+                                        >
+                                            Đổi 500 điểm lấy voucher 10%
+                                        </button>
+                                        <button
+                                            onClick={() => handleRedeem(1000)}
+                                            disabled={user.points < 1000}
+                                            className="bg-purple-500 text-white py-2 px-4 rounded hover:bg-purple-600 disabled:opacity-50 transition"
+                                        >
+                                            Đổi 1000 điểm lấy voucher 20%
+                                        </button>
+                                    </div>
                                 </div>
                             )}
                         </div>
                     ) : (
-                        <p className="text-center text-gray-500 mt-6">Đang tải thông tin người dùng...</p>
+                        <p className="text-center text-gray-500 mt-8">Đang tải thông tin người dùng...</p>
                     )}
                 </div>
             </div>
-            <div className="text-right mt-10">
+
+            <div className="mt-10 text-right">
                 <Link
                     to="/change-password"
-                    className="inline-block px-6 py-2 bg-yellow-500 text-white font-semibold rounded-lg shadow-md hover:bg-yellow-600 transition"
+                    className="inline-block px-6 py-2 bg-yellow-500 text-white font-semibold rounded-lg shadow hover:bg-yellow-600 transition"
                 >
                     Đổi mật khẩu
                 </Link>
             </div>
         </div>
+
     );
 };
 

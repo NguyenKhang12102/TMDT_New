@@ -78,18 +78,28 @@ public class AuthController {
     }
 
     @PostMapping("/verify")
-    public ResponseEntity<?> verifyCode(@RequestBody Map<String,String> map){
+    public ResponseEntity<?> verifyCode(@RequestBody Map<String, String> map) {
         String userName = map.get("userName");
         String code = map.get("code");
 
-        User user= (User) userDetailsService.loadUserByUsername(userName);
-        if(null != user && user.getVerificationCode().equals(code)){
-            registrationService.verifyUser(userName);
-            return new ResponseEntity<>(HttpStatus.OK);
+        try {
+            registrationService.verifyUser(userName, code);
+            return ResponseEntity.ok("Xác minh thành công");
+        } catch (RuntimeException ex) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
         }
-        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
+    @PostMapping("/resend-verification")
+    public ResponseEntity<?> resendVerification(@RequestBody Map<String, String> payload) {
+        String email = payload.get("email");
 
+        try {
+            registrationService.resendVerificationCode(email);
+            return ResponseEntity.ok("Mã xác minh đã được gửi lại.");
+        } catch (RuntimeException ex) {
+            return ResponseEntity.badRequest().body(ex.getMessage());
+        }
+    }
 
 
 }
