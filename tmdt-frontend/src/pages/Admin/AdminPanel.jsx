@@ -9,10 +9,14 @@ import CategoryList from './Category/CategoryList.jsx';
 import CategoryEdit from './Category/CategoryEdit.jsx';
 import OrderList from "./Order/OrderList.jsx";
 import OrderShow from "./Order/OrderShow.jsx";
+import OrderCustomEdit from './OrderCustom/OrderCustomEdit.jsx';
+import OrderCustomList from './OrderCustom/OrderCustomList.jsx';
+
+import OrderCustomShow from './OrderCustom/OrderCustomShow.jsx';
+
 
 import UserList from './User/UserList.jsx';
 import UserShow from './User/UserShow.jsx';
-
 import AdminDashboard from './AdminDashboard.jsx'; // ✅ thêm dòng này
 
 const API_BASE_URL = "http://localhost:8080";
@@ -44,6 +48,26 @@ const dataProvider = {
 
         return baseProvider.getList(resource, params);
     },
+    // ✅ Thêm override cho PUT order-custom
+    update: (resource, params) => {
+        if (resource === 'order-custom') {
+            const { id } = params;
+            const { status } = params.data;
+
+            return httpClient(`${API_BASE_URL}/api/order-custom/${id}/status`, {
+                method: 'PUT',
+                body: JSON.stringify({ status }),
+                headers: new Headers({
+                    'Content-Type': 'application/json',
+                    Authorization: `Bearer ${localStorage.getItem('authToken')}`,
+                }),
+            }).then(() => ({
+                data: { id, status },
+            }));
+        }
+
+        return baseProvider.update(resource, params);
+    }
 };
 
 const wrappedProvider = withLifecycleCallbacks(
@@ -101,6 +125,7 @@ export const AdminPanel = () => {
             <Resource name="category-types" />
             <Resource name="categories" />
             <Resource name='order' list={OrderList} show={OrderShow} />
+            <Resource name='order-custom' list={OrderCustomList} show={OrderCustomShow}  edit={OrderCustomEdit}/>
             <Resource name='user' list={UserList} show={UserShow} />
         </Admin>
     );

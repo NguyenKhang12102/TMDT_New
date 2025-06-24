@@ -35,6 +35,7 @@ public class CustomUserDetailService implements UserDetailsService {
         User user = userDetailRepository.findByEmail(email)
                 .orElseThrow(() -> new UsernameNotFoundException("Không tìm thấy người dùng với email: " + email));
         return user;
+
     }
 
     @Transactional

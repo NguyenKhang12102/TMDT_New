@@ -1,6 +1,5 @@
 package CDWEB.watch.auth.services;
 
-
 import CDWEB.watch.auth.dto.RegistrationRequest;
 import CDWEB.watch.auth.dto.RegistrationResponse;
 import CDWEB.watch.auth.entities.User;
@@ -14,6 +13,7 @@ import org.springframework.web.server.ServerErrorException;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
+
 
 @Service
 public class RegistrationService {
@@ -71,7 +71,6 @@ public class RegistrationService {
             String code = VerificationCodeGenerator.generateCode();
             user.setVerificationCode(code);
             user.setVerificationCodeCreatedAt(LocalDateTime.now());
-
             userDetailRepository.save(user);
             emailService.sendMail(user);
 
@@ -85,7 +84,6 @@ public class RegistrationService {
         }
 
     }
-
     public void verifyUser(String userName, String inputCode) {
         User user = userDetailRepository.findByEmail(userName)
                 .orElseThrow(() -> new UsernameNotFoundException("Không tìm thấy người dùng với email: " + userName));
